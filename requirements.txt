@@ -15,6 +15,7 @@ keyring>=25.4
 # Math engine
 numpy>=2.1
 scipy>=1.14
+pandas>=2.2                       # transitive via alpaca-py, pinned explicitly since indicators.py uses it directly
 
 # Fundamentals: market cap, sector, next earnings date (Alpaca has none of these)
 yfinance>=0.2.44

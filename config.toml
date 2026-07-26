@@ -19,8 +19,10 @@ premium_min_dte = 30
 premium_max_dte = 45
 
 [liquidity]
-min_open_interest = 100
-min_volume = 10
+# Alpaca's option snapshot has no open-interest field (confirmed in alpaca-py's
+# OptionsSnapshot model — trade/quote/greeks/IV only), so the liquidity gate uses
+# quoted depth (bid_size/ask_size, in contracts) and spread instead.
+min_quote_size = 5
 max_bid_ask_spread_pct = 0.10     # of mid price
 
 [report]
