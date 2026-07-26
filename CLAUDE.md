@@ -26,7 +26,7 @@ All commands run from the repo root using the venv interpreter (`.venv\Scripts\p
 .venv\Scripts\python.exe scripts\export_static_demo.py         # regenerate docs/ for GitHub Pages
 ```
 
-There is no packaging config — `tests/conftest.py` and each script prepend `src/` to `sys.path`. Tests are pure math (`bs`, `pop`, `indicators`, `strategies`) and hit no network; the data layer has no test coverage.
+`pip install -e .` also installs `options-web` / `options-check` entry points (`.venv\Scripts\options-web.exe`), wired through `src/optionslab/cli.py`. `scripts/run_web.py` and `scripts/check_account.py` are thin shims onto that same module, kept so the commands above keep working unchanged. Tests are pure math (`bs`, `pop`, `indicators`, `strategies`) and hit no network; the data layer has no test coverage.
 
 ## Architecture
 

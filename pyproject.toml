@@ -20,5 +20,9 @@ requires-python = ">=3.11"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[project.scripts]
+options-web = "optionslab.cli:web"
+options-check = "optionslab.cli:check_account"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
