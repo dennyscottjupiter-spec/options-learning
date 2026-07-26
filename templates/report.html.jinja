@@ -265,7 +265,7 @@
             {% for row in methodology %}
             <tr>
               <td>{{ s[row.metric_key] }}</td>
-              <td class="formula">{{ row.formula }}</td>
+              <td class="formula">{{ row.formula_html }}</td>
               <td class="source">{{ row.source }}</td>
             </tr>
             {% endfor %}

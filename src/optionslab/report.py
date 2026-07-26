@@ -5,10 +5,12 @@ print a running report page to PDF, auto-archived under archive/.
 """
 from __future__ import annotations
 
+import re
 from datetime import date, datetime
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from markupsafe import Markup, escape
 
 from optionslab import fundamentals, indicators, market, select
 from optionslab.config import load_config
@@ -56,6 +58,31 @@ def _format_market_cap(value: float | None) -> str:
     return f"${value:,.0f}"
 
 
+_FORMULA_TOKEN_RE = re.compile(
+    r"(?P<func>\b(?:N|ln|mean)\b)"
+    r"|(?P<ident>\b(?:POP_MC|capital_required|avg_win|avg_loss|breakeven|payoff|GBM|seed|S_T|DTE|d2|S|r|T)\b|σ)"
+    r"|(?P<num>\b\d{1,3}(?:,\d{3})+\b|\b\d+\b)"
+    r"|(?P<op>[()\[\]{}=+/,.<>]|−|—|×|÷|≤|≥|²|√)"
+)
+
+
+def _highlight_formula(formula: str) -> Markup:
+    """Tokenizes one of the six known methodology formula strings into colour-
+    coded spans (function / identifier / number / operator), server-side so it
+    works identically in the live app, the Playwright-rendered PDF, and the
+    static export with no client-side JS or highlighting library."""
+    out: list[str] = []
+    pos = 0
+    for m in _FORMULA_TOKEN_RE.finditer(formula):
+        if m.start() > pos:
+            out.append(str(escape(formula[pos : m.start()])))
+        kind = m.lastgroup
+        out.append(f'<span class="tok-{kind}">{escape(m.group())}</span>')
+        pos = m.end()
+    out.append(str(escape(formula[pos:])))
+    return Markup("".join(out))
+
+
 def _methodology_rows(mc_paths: int, mc_seed: int, src_dir: str) -> list[dict]:
     """Every 'Probability of profit' figure traces to one of these — exact
     formula as coded, plus the path to the function that computes it, so the
@@ -65,7 +92,7 @@ def _methodology_rows(mc_paths: int, mc_seed: int, src_dir: str) -> list[dict]:
     pop_py = f"{src_dir}/pop.py"
     bs_py = f"{src_dir}/bs.py"
     select_py = f"{src_dir}/select.py"
-    return [
+    rows = [
         {
             "metric_key": "pop_closed_form",
             "formula": "N(d2) [breakeven above spot] or N(−d2) [below] — "
@@ -101,6 +128,9 @@ def _methodology_rows(mc_paths: int, mc_seed: int, src_dir: str) -> list[dict]:
             "source": f"{select_py}::evaluate_contract",
         },
     ]
+    for row in rows:
+        row["formula_html"] = _highlight_formula(row["formula"])
+    return rows
 
 
 def build_report_context(

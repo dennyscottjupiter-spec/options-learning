@@ -12,6 +12,10 @@
   --coral: #E5484D;
   --coral-soft: #FDEBEC;
   --muted: #64748B;
+  --syntax-fn: #7C3AED;
+  --syntax-ident: #0B6E99;
+  --syntax-num: #B45309;
+  --syntax-op: #55647C;
 
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-body: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -34,6 +38,10 @@
   --coral: #F87171;
   --coral-soft: #3A1B22;
   --muted: #8B949E;
+  --syntax-fn: #C792EA;
+  --syntax-ident: #9CDCFE;
+  --syntax-num: #D7BA7D;
+  --syntax-op: #8B949E;
 }
 
 * { box-sizing: border-box; }
@@ -660,6 +668,11 @@ html, body {
   word-break: break-all;
 }
 
+.tok-func { color: var(--syntax-fn); font-weight: 600; }
+.tok-ident { color: var(--syntax-ident); }
+.tok-num { color: var(--syntax-num); }
+.tok-op { color: var(--syntax-op); }
+
 /* ---------- P/L semantics — mint/coral used nowhere else ---------- */
 
 .pl-positive { color: var(--mint); }
@@ -672,6 +685,7 @@ a { color: var(--indigo); }
     --paper: #F2F4F7; --panel: #FFFFFF; --hairline: #E3E8EF; --ink: #0B1120;
     --indigo: #4338CA; --indigo-soft: #EEF0FD; --mint: #0E9F6E; --mint-soft: #E6F7F1;
     --coral: #E5484D; --coral-soft: #FDEBEC; --muted: #64748B;
+    --syntax-fn: #7C3AED; --syntax-ident: #0B6E99; --syntax-num: #B45309; --syntax-op: #55647C;
   }
   :root[data-theme="dark"] body { background-image: none; }
   :root[data-theme="dark"] .warning.earnings,
