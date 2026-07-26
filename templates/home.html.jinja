@@ -23,7 +23,7 @@
       <p class="subtitle">{{ s.app_tagline }}</p>
     </div>
     <div class="header-controls">
-      <a class="flag-toggle" href="{{ lang_toggle_href }}">{% include "_flag_br.html.jinja" %} {{ s.lang_toggle }}</a>
+      <a class="flag-toggle" href="{{ lang_toggle_href }}">{% if lang == 'en' %}{% include "_flag_br.html.jinja" %}{% else %}{% include "_flag_uk.html.jinja" %}{% endif %} {{ s.lang_toggle }}</a>
       {% include "_help_toggle.html.jinja" %}
       {% include "_theme_toggle.html.jinja" %}
     </div>
