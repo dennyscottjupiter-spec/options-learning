@@ -16,7 +16,7 @@ Hard constraints baked into the design:
 All commands run from the repo root using the venv interpreter (`.venv\Scripts\python.exe`, Python 3.14).
 
 ```powershell
-.venv\Scripts\python.exe -m pytest -q                          # full suite (35 tests, ~13s)
+.venv\Scripts\python.exe -m pytest -q                          # full suite (69 tests, ~28s)
 .venv\Scripts\python.exe -m pytest tests\test_pop.py -q        # one file
 .venv\Scripts\python.exe -m pytest -q -k monte_carlo           # one test by name
 

@@ -1,6 +1,7 @@
 """
 Covers the selection pipeline with no network access: `market` is stubbed out
-so the chain, spot price, and account are all deterministic fixtures.
+so the chain, spot price, and account are all deterministic fixtures (see
+tests/conftest.py).
 
 Monte Carlo path counts are also cut down here (see `patched_config`) — the
 selection logic under test is path-count-independent, and the real 100,000
@@ -8,86 +9,14 @@ paths would allocate hundreds of MB per contract for no extra confidence.
 """
 from __future__ import annotations
 
-import copy
 from datetime import date, timedelta
 
 import pytest
 
 from optionslab import market, select
-from optionslab.bs import bs_price
 from optionslab.config import load_config
 
-SPOT = 100.0
-SIGMA = 0.30
-RATE = 0.043
-
-
-def _contract(strike: float, option_type: str, expiration: str, *, quoted: bool = True) -> dict:
-    """A chain entry shaped exactly like market.get_option_chain returns one:
-    no Greeks and no IV, which is the common case that forces select.py to fall
-    back to local Black-Scholes."""
-    T = (date.fromisoformat(expiration) - date.today()).days / 365.0
-    # float() throughout: Alpaca hands back plain JSON numbers, and letting
-    # numpy scalars leak in from bs_price would make this fixture unrealistic.
-    fair = float(bs_price(SPOT, strike, T, RATE, SIGMA, option_type))
-    return {
-        "symbol": f"TST{expiration.replace('-', '')}{option_type[0].upper()}{int(strike * 1000):08d}",
-        "underlying": "TST",
-        "expiration": expiration,
-        "type": option_type,
-        "strike": strike,
-        "bid": round(fair * 0.99, 2) if quoted else None,
-        "ask": round(fair * 1.01, 2) if quoted else None,
-        "bid_size": 10 if quoted else 0,
-        "ask_size": 10 if quoted else 0,
-        "last_price": round(fair, 2),
-        "implied_volatility": None,
-        "delta": None,
-        "gamma": None,
-        "theta": None,
-        "vega": None,
-        "rho": None,
-    }
-
-
-@pytest.fixture
-def leaps_expiration() -> str:
-    """Inside the long_call window (180-730 DTE) from config.toml."""
-    return (date.today() + timedelta(days=365)).isoformat()
-
-
-@pytest.fixture
-def call_chain(leaps_expiration: str) -> list[dict]:
-    return [_contract(k, "call", leaps_expiration) for k in range(60, 141, 5)]
-
-
-@pytest.fixture
-def patched_config(monkeypatch: pytest.MonkeyPatch) -> dict:
-    cfg = copy.deepcopy(load_config())
-    cfg["math"]["monte_carlo_paths"] = 2_000
-    monkeypatch.setattr(select, "load_config", lambda: cfg)
-    return cfg
-
-
-@pytest.fixture
-def stub_market(monkeypatch: pytest.MonkeyPatch, call_chain: list[dict]) -> None:
-    monkeypatch.setattr(market, "get_latest_price", lambda ticker: SPOT)
-    monkeypatch.setattr(
-        market,
-        "get_option_chain",
-        lambda ticker, **kwargs: call_chain,
-    )
-    monkeypatch.setattr(
-        market,
-        "get_account",
-        lambda: {
-            "status": "ACTIVE",
-            "cash": 50_000.0,
-            "buying_power": 50_000.0,
-            "portfolio_value": 50_000.0,
-        },
-    )
-
+from conftest import RATE, SIGMA, SPOT, _contract
 
 # --- expiration windows -----------------------------------------------------
 
