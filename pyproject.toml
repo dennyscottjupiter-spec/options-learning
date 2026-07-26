@@ -1,0 +1,24 @@
+# Packaging metadata only — runtime dependencies stay in requirements.txt,
+# which documents *why* each one is there. Install both, once, into the venv:
+#
+#     .venv\Scripts\python.exe -m pip install -r requirements.txt
+#     .venv\Scripts\python.exe -m pip install -e .
+#
+# The editable install is what puts `optionslab` on the import path, so neither
+# the scripts nor the tests need a sys.path hack.
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "options-learning"
+version = "0.1.0"
+description = "A learning tool for US stock options: live option chains, probability math, and reports that explain themselves."
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -17,11 +17,8 @@ from __future__ import annotations
 
 import os
 import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from optionslab.creds import CredentialsNotSetError, get_alpaca_credentials  # noqa: E402
+from optionslab.creds import CredentialsNotSetError, get_alpaca_credentials
 
 READ_ONLY_TOOLSETS = "account,watchlists,assets,stock-data,crypto-data,options-data,corporate-actions"
 

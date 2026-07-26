@@ -5,12 +5,9 @@ API), not a live app: no watchlist, no ticker analyzer, no PDF export, no
 credentials anywhere in the output. Run: python3 scripts\\export_static_demo.py
 """
 import shutil
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from optionslab import report  # noqa: E402
+from optionslab import report
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
