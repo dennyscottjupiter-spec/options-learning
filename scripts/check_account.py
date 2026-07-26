@@ -7,13 +7,10 @@ account status and buying power. Never prints the API key or secret.
 from __future__ import annotations
 
 import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from alpaca.trading.client import TradingClient
 
-from alpaca.trading.client import TradingClient  # noqa: E402
-
-from optionslab.creds import CredentialsNotSetError, get_alpaca_credentials  # noqa: E402
+from optionslab.creds import CredentialsNotSetError, get_alpaca_credentials
 
 
 def main() -> None:
