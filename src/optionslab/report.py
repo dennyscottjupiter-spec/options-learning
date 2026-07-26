@@ -10,13 +10,14 @@ import re
 from datetime import date, datetime
 from pathlib import Path
 
+import numpy as np
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markupsafe import Markup, escape
 
 from optionslab import fundamentals, indicators, market, select
 from optionslab.config import load_config
 from optionslab.i18n import get_strategy_blurb, get_strategy_name, get_strings
-from optionslab.svg import render_payoff_svg
+from optionslab.svg import render_payoff_svg, render_theta_decay_svg
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES_DIR = PROJECT_ROOT / "templates"
@@ -115,6 +116,26 @@ def _highlight_formula(formula: str) -> Markup:
         pos = m.end()
     out.append(str(escape(formula[pos:])))
     return Markup("".join(out))
+
+
+def _take_profit_price(strategy, target_profit: float) -> float | None:
+    """The terminal stock price at which `strategy.payoff_fn` first reaches
+    `target_profit`, found by bisection. payoff_fn is monotonic non-decreasing
+    for these four bullish-shaped strategies (see strategies.py's module
+    docstring), so a plain bisection is sufficient — no need for a general
+    root-finder. Returns None if the target is never reached within a wide
+    search range (shouldn't happen for a target below max_profit, but a
+    strategy-agnostic function shouldn't assume that without checking)."""
+    lo, hi = 0.01, strategy.underlying_price * 5
+    if float(strategy.payoff_fn(np.array([hi]))[0]) < target_profit:
+        return None
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        if float(strategy.payoff_fn(np.array([mid]))[0]) < target_profit:
+            lo = mid
+        else:
+            hi = mid
+    return hi
 
 
 _SHORT_OPTION_STRATEGIES = {"covered_call", "cash_secured_put"}
@@ -295,6 +316,14 @@ def build_report_context(
     T = max((exp_date - date.today()).days, 1) / 365.0
     sigma = contract.get("implied_volatility") or 0.0
     payoff_svg = render_payoff_svg(strategy, result["spot_price"], T, r, sigma)
+    theta_decay_svg = render_theta_decay_svg(strategy, result["spot_price"], T, r, sigma)
+
+    # max_profit can be negative for a covered call whose strike sits below
+    # current spot (assignment would realize a loss on the shares) — no
+    # positive profit target to take in that case, same as unbounded upside.
+    take_profit_dollar = strategy.max_profit * 0.5 if (strategy.max_profit or 0) > 0 else None
+    take_profit_price = _take_profit_price(strategy, take_profit_dollar) if take_profit_dollar is not None else None
+    rolling_applicable = strategy.strategy_type in _SHORT_OPTION_STRATEGIES
 
     earnings_warning = False
     if fund.get("next_earnings_date"):
@@ -360,6 +389,10 @@ def build_report_context(
         "why_best": why_best,
         "candidates_evaluated": result["candidates_evaluated"],
         "payoff_svg": payoff_svg,
+        "theta_decay_svg": theta_decay_svg,
+        "take_profit_dollar": take_profit_dollar,
+        "take_profit_price": take_profit_price,
+        "rolling_applicable": rolling_applicable,
         "earnings_warning": earnings_warning,
         "early_assignment_warning": early_assignment_warning,
         "moneyness_split": moneyness_split,

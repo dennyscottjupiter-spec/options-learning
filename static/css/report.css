@@ -335,6 +335,15 @@ html, body {
   margin: 0 0 14px;
 }
 
+.panel h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  margin: 20px 0 6px;
+}
+
+.panel h3:first-of-type { margin-top: 0; }
+
 .stat-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -423,7 +432,7 @@ html, body {
 
 /* ---------- Payoff diagram ---------- */
 
-.payoff-svg {
+.payoff-svg, .theta-decay-svg {
   width: 100%;
   height: auto;
   display: block;

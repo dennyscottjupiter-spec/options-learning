@@ -337,6 +337,36 @@
     </div>
   </section>
 
+  <section class="panel">
+    <h2>{{ s.whats_next_section }}</h2>
+
+    <h3>{{ s.take_profit_title }}</h3>
+    {% if take_profit_dollar is not none %}
+    <p>{{ s.take_profit_intro }}</p>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">{{ s.take_profit_target_label }}</span>
+        <span class="value pl-positive">{{ take_profit_dollar | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.take_profit_price_label }}</span>
+        <span class="value">{{ take_profit_price | money }}</span>
+      </div>
+    </div>
+    {% else %}
+    <p>{{ s.take_profit_none_body }}</p>
+    {% endif %}
+
+    <h3>{{ s.theta_decay_title }}</h3>
+    {{ theta_decay_svg | safe }}
+    <p class="caption">{{ s.theta_decay_caption }}</p>
+
+    {% if rolling_applicable %}
+    <h3>{{ s.rolling_title }}</h3>
+    <p>{{ s.rolling_body }}</p>
+    {% endif %}
+  </section>
+
   <p class="footer-note">{{ s.footer_disclaimer }}</p>
 
 </div>

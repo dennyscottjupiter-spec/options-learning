@@ -12,6 +12,8 @@ import math
 
 import numpy as np
 
+from optionslab.bs import bs_price
+
 # Palette — must match static/css/report.css exactly (the ribbon is decorative
 # but the P/L colors are semantic and used nowhere else, per the design brief).
 INK = "#000000"
@@ -140,5 +142,68 @@ def render_payoff_svg(strategy, spot_price: float, T: float, r: float, sigma: fl
     spot {price_label(spot_price)}</text>
 
   <path d="{payoff_line}" fill="none" stroke="{INK}" stroke-width="2.5" stroke-linejoin="round" />
+</svg>
+""".strip()
+
+
+def render_theta_decay_svg(strategy, spot_price: float, T: float, r: float, sigma: float) -> str:
+    """Remaining extrinsic value vs. days to expiry, holding spot and IV fixed
+    at today's values — makes visible that time decay accelerates near
+    expiry, the reason holding to expiry is usually suboptimal. Built the
+    same way as render_payoff_svg (hand-built inline SVG, same palette,
+    same white card) so it renders identically in the browser and the
+    Playwright-rendered PDF."""
+    K = strategy.strike
+    option_type = strategy.option_type
+    intrinsic = max(0.0, spot_price - K) if option_type == "call" else max(0.0, K - spot_price)
+
+    dte_total = max(round(T * 365), 1)
+    days = np.linspace(dte_total, 0, 220)
+    extrinsic = np.array(
+        [max(0.0, bs_price(spot_price, K, d / 365.0, r, sigma, option_type) - intrinsic) for d in days]
+    )
+    e_max = max(float(extrinsic.max()), 1e-6)
+
+    def x_px(d: float) -> float:
+        return _PAD_LEFT + (dte_total - d) / dte_total * _PLOT_W
+
+    def y_px(e: float) -> float:
+        return _PAD_TOP + (e_max - e) / e_max * _PLOT_H
+
+    baseline_px = _PAD_TOP + _PLOT_H
+    zero_px = y_px(0.0)
+
+    line_pts = " ".join(f"{x_px(d):.1f},{y_px(e):.1f}" for d, e in zip(days, extrinsic))
+    decay_line = f"M {line_pts}"
+    fill_path = f"M {x_px(days[0]):.1f},{zero_px:.1f} L {line_pts} L {x_px(days[-1]):.1f},{zero_px:.1f} Z"
+
+    gridlines = []
+    n_gridlines = 3
+    for i in range(n_gridlines + 1):
+        gy = e_max * i / n_gridlines
+        gpx = y_px(gy)
+        gridlines.append(
+            f'<line x1="{_PAD_LEFT}" y1="{gpx:.1f}" x2="{_WIDTH - _PAD_RIGHT}" y2="{gpx:.1f}" '
+            f'stroke="{HAIRLINE}" stroke-width="1" />'
+            f'<text x="{_PAD_LEFT - 10}" y="{gpx + 4:.1f}" text-anchor="end" '
+            f'font-family="JetBrains Mono, monospace" font-size="11" fill="{MUTED}">${gy:,.0f}</text>'
+        )
+
+    return f"""
+<svg viewBox="0 0 {_WIDTH} {_HEIGHT}" xmlns="http://www.w3.org/2000/svg" class="theta-decay-svg" role="img"
+     aria-label="Theta decay curve: remaining extrinsic value versus days to expiry">
+  <rect x="0" y="0" width="{_WIDTH}" height="{_HEIGHT}" fill="white" />
+  {''.join(gridlines)}
+
+  <path d="{fill_path}" fill="{INDIGO}" fill-opacity="0.12" stroke="none" />
+
+  <text x="{_PAD_LEFT}" y="{baseline_px + 20}" text-anchor="start"
+        font-family="Inter Tight, sans-serif" font-size="11" font-weight="600" fill="{MUTED}">
+    today ({dte_total}d, ${extrinsic[0]:,.2f})</text>
+  <text x="{_WIDTH - _PAD_RIGHT}" y="{baseline_px + 20}" text-anchor="end"
+        font-family="Inter Tight, sans-serif" font-size="11" font-weight="600" fill="{MUTED}">
+    expiry ($0.00)</text>
+
+  <path d="{decay_line}" fill="none" stroke="{INK}" stroke-width="2.5" stroke-linejoin="round" />
 </svg>
 """.strip()

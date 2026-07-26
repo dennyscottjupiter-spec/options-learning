@@ -10,10 +10,13 @@ from __future__ import annotations
 from datetime import date, timedelta
 from pathlib import Path
 
+import numpy as np
 import pytest
+from markupsafe import escape
 
 from optionslab import fundamentals, market, report
 from optionslab.i18n import CATALOG
+from optionslab.strategies import build_covered_call
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -369,6 +372,71 @@ def test_assignment_tax_note_only_for_covered_call(patched_config, monkeypatch: 
 def test_assignment_tax_note_absent_for_long_call(patched_config, stub_market, stub_report_data):
     html = report.render_report_html("TST", "long_call", mode="pro", lang="en", static_export=True, asset_prefix=".")
     assert CATALOG["en"]["assignment_tax_note"] not in html
+
+
+# --- "What happens next": take-profit, theta decay, rolling -----------------
+
+
+def test_take_profit_price_matches_closed_form_for_covered_call():
+    """Below the strike, covered-call payoff is linear in S_T, so the price at
+    which it reaches a target profit has a closed form to check the bisection
+    helper against: payoff(S_T) = (S_T - S0 + premium) * 100 for S_T < K."""
+    contract = {"symbol": "T", "strike": 110.0, "expiration": "2099-01-01", "bid": 4.0, "ask": 4.2}
+    strat = build_covered_call(contract, underlying_price=100.0)
+    target = strat.max_profit * 0.5
+
+    price = report._take_profit_price(strat, target)
+
+    expected = target / 100 - strat.premium + strat.underlying_price
+    assert price == pytest.approx(expected, abs=0.01)
+    assert strat.payoff_fn(np.array([price]))[0] == pytest.approx(target, abs=1.0)
+
+
+def test_take_profit_none_for_unbounded_strategy(patched_config, stub_market, stub_report_data):
+    ctx = report.build_report_context("TST", "long_call", static_export=True)
+    assert ctx["strategy"].max_profit is None
+    assert ctx["take_profit_dollar"] is None
+    assert ctx["take_profit_price"] is None
+
+
+def test_theta_decay_svg_present_and_decays_to_zero(patched_config, stub_market, stub_report_data):
+    ctx = report.build_report_context("TST", "long_call", static_export=True)
+    assert ctx["theta_decay_svg"].startswith("<svg")
+    assert ctx["theta_decay_svg"].rstrip().endswith("</svg>")
+    assert "$0.00" in ctx["theta_decay_svg"]  # extrinsic value at expiry
+
+
+def test_rolling_explainer_only_for_covered_call(patched_config, monkeypatch: pytest.MonkeyPatch, daily_bars):
+    expiration = (date.today() + timedelta(days=35)).isoformat()
+    monkeypatch.setattr(market, "get_latest_price", lambda ticker: 105.0)
+    monkeypatch.setattr(market, "get_option_chain", lambda ticker, **kwargs: _covered_call_chain(expiration, 105.0))
+    monkeypatch.setattr(
+        market,
+        "get_account",
+        lambda: {"status": "ACTIVE", "cash": 50_000.0, "buying_power": 50_000.0, "portfolio_value": 50_000.0},
+    )
+    monkeypatch.setattr(market, "get_daily_bars", lambda ticker, **kwargs: daily_bars)
+    monkeypatch.setattr(
+        fundamentals,
+        "get_fundamentals",
+        lambda symbol: {
+            "company_name": symbol,
+            "market_cap": None,
+            "sector": None,
+            "next_earnings_date": None,
+            "next_ex_dividend_date": None,
+        },
+    )
+    html = report.render_report_html("TST", "covered_call", mode="pro", lang="en", static_export=True, asset_prefix=".")
+    assert str(escape(CATALOG["en"]["rolling_body"])) in html
+
+
+def test_rolling_explainer_absent_for_long_call(patched_config, stub_market, stub_report_data):
+    ctx = report.build_report_context("TST", "long_call", static_export=True)
+    assert ctx["rolling_applicable"] is False
+
+    html = report.render_report_html("TST", "long_call", mode="pro", lang="en", static_export=True, asset_prefix=".")
+    assert str(escape(CATALOG["en"]["rolling_body"])) not in html
 
 
 # --- payoff diagram + technical bias -----------------------------------------
