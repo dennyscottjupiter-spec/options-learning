@@ -397,12 +397,14 @@ html, body {
 .warning.earnings { background: var(--coral-soft); color: #7A1F22; }
 .warning.liquidity { background: #FFF7E8; color: #7A5A0A; }
 .warning.affordability { background: var(--coral-soft); color: #7A1F22; }
+.warning.early-assignment { background: #FFF7E8; color: #7A5A0A; }
 .warning.static-demo { background: var(--indigo-soft); color: #1E2358; }
 :root[data-theme="dark"] .warning.static-demo { color: #C7D2FE; }
 
 :root[data-theme="dark"] .warning.earnings,
 :root[data-theme="dark"] .warning.affordability { color: #FCA5A5; }
-:root[data-theme="dark"] .warning.liquidity { background: #3A2E0A; color: #FCD34D; }
+:root[data-theme="dark"] .warning.liquidity,
+:root[data-theme="dark"] .warning.early-assignment { background: #3A2E0A; color: #FCD34D; }
 
 /* ---------- Strategy blurb / teaching copy ---------- */
 
@@ -690,7 +692,8 @@ a { color: var(--indigo); }
   :root[data-theme="dark"] body { background-image: none; }
   :root[data-theme="dark"] .warning.earnings,
   :root[data-theme="dark"] .warning.affordability { color: #7A1F22; }
-  :root[data-theme="dark"] .warning.liquidity { background: #FFF7E8; color: #7A5A0A; }
+  :root[data-theme="dark"] .warning.liquidity,
+  :root[data-theme="dark"] .warning.early-assignment { background: #FFF7E8; color: #7A5A0A; }
   :root[data-theme="dark"] .teach { color: #1E2358; }
   body { background: white; }
   .page { max-width: none; padding: 0 24px; }

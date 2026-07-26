@@ -125,6 +125,13 @@
   </div>
   {% endif %}
 
+  {% if early_assignment_warning %}
+  <div class="warning early-assignment">
+    <h3>⚠ {{ s.early_assignment_warning_title }}</h3>
+    <p>{{ s["early_assignment_warning_body_" ~ strategy_type] }}</p>
+  </div>
+  {% endif %}
+
   <section class="panel">
     <h2>{{ strategy_name }}</h2>
     <p class="blurb">{{ strategy_blurb }}</p>

@@ -17,8 +17,9 @@ FUNDAMENTALS_CACHE_TTL_SECONDS = 24 * 60 * 60
 
 
 def get_fundamentals(symbol: str) -> dict:
-    """Returns {market_cap, sector, next_earnings_date} for `symbol`.
-    next_earnings_date is None if yfinance has no upcoming date on file."""
+    """Returns {market_cap, sector, next_earnings_date, next_ex_dividend_date}
+    for `symbol`. Both date fields are None if yfinance has no upcoming date
+    on file."""
     cache_key = f"fundamentals:{symbol}:{date.today().isoformat()}"
     cached = cache_get(cache_key, FUNDAMENTALS_CACHE_TTL_SECONDS)
     if cached is not None:
@@ -30,11 +31,17 @@ def get_fundamentals(symbol: str) -> dict:
     earnings_dates = calendar.get("Earnings Date") or []
     next_earnings = earnings_dates[0].isoformat() if earnings_dates else None
 
+    ex_dividend = calendar.get("Ex-Dividend Date")
+    if isinstance(ex_dividend, list):
+        ex_dividend = ex_dividend[0] if ex_dividend else None
+    next_ex_dividend = ex_dividend.isoformat() if ex_dividend else None
+
     result = {
         "company_name": info.get("longName") or info.get("shortName") or symbol,
         "market_cap": info.get("marketCap"),
         "sector": info.get("sector"),
         "next_earnings_date": next_earnings,
+        "next_ex_dividend_date": next_ex_dividend,
     }
     cache_set(cache_key, result)
     return result
