@@ -87,6 +87,31 @@ def _highlight_formula(formula: str) -> Markup:
     return Markup("".join(out))
 
 
+_SHORT_OPTION_STRATEGIES = {"covered_call", "cash_secured_put"}
+
+
+def _early_assignment_warning(
+    strategy_type: str,
+    option_type: str,
+    strike: float,
+    underlying_price: float,
+    next_ex_dividend_date: str | None,
+    exp_date: date,
+) -> bool:
+    """True only for the two strategies that sell an option (covered call,
+    cash-secured put) when the short leg is currently in-the-money AND an
+    ex-dividend date falls inside the window between today and expiration —
+    the specific early-assignment risk the payoff diagram can't show, since
+    it's about timing, not price."""
+    if strategy_type not in _SHORT_OPTION_STRATEGIES or not next_ex_dividend_date:
+        return False
+    itm = underlying_price > strike if option_type == "call" else underlying_price < strike
+    if not itm:
+        return False
+    ex_dividend = datetime.strptime(next_ex_dividend_date, "%Y-%m-%d").date()
+    return date.today() <= ex_dividend <= exp_date
+
+
 def _function_line(file_path: Path, func_name: str) -> int | None:
     """Best-effort line number of `def func_name` in `file_path`, for anchoring
     a Source-column link. Returns None (unanchored link) rather than raising
@@ -247,6 +272,15 @@ def build_report_context(
         if date.today() <= next_earnings <= exp_date:
             earnings_warning = True
 
+    early_assignment_warning = _early_assignment_warning(
+        strategy.strategy_type,
+        strategy.option_type,
+        strategy.strike,
+        strategy.underlying_price,
+        fund.get("next_ex_dividend_date"),
+        exp_date,
+    )
+
     s = get_strings(lang)
     strings_dict = {**s}
 
@@ -289,6 +323,7 @@ def build_report_context(
         "candidates_evaluated": result["candidates_evaluated"],
         "payoff_svg": payoff_svg,
         "earnings_warning": earnings_warning,
+        "early_assignment_warning": early_assignment_warning,
         "indicators": ind,
         "bias_display": s[_BIAS_KEY.get(ind["directional_bias"], "bias_insufficient")],
     }

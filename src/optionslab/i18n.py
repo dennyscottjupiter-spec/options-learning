@@ -130,6 +130,17 @@ CATALOG = {
         "affordability_warning_title": "Exceeds paper buying power",
         "affordability_warning_body": "The capital this trade requires is more than your "
         "paper account's current buying power.",
+        "early_assignment_warning_title": "Early assignment risk",
+        "early_assignment_warning_body_covered_call": "The option buyer can exercise this "
+        "contract at any time before expiration, not just at expiry. This call is "
+        "in-the-money with an ex-dividend date before expiration, so the shares are more "
+        "likely to be called away early — the buyer captures the dividend, and your "
+        "position closes sooner than the payoff diagram assumes.",
+        "early_assignment_warning_body_cash_secured_put": "The option buyer can exercise "
+        "this contract at any time before expiration, not just at expiry. This put is "
+        "in-the-money with an ex-dividend date before expiration, so the shares are more "
+        "likely to be put to you early, closing your position sooner than the payoff "
+        "diagram assumes.",
         "expected_return_note": "Under the model's own risk-neutral assumptions, every "
         "option's expected profit is approximately zero minus trading costs — the "
         "probabilities above describe likely outcomes, not a positive edge. A profitable "
@@ -249,6 +260,19 @@ CATALOG = {
         "affordability_warning_title": "Excede o poder de compra simulado",
         "affordability_warning_body": "O capital exigido por esta operação é maior que o "
         "poder de compra atual da sua conta simulada (paper).",
+        "early_assignment_warning_title": "Risco de exercício antecipado",
+        "early_assignment_warning_body_covered_call": "O comprador da opção pode exercer "
+        "este contrato a qualquer momento antes do vencimento, não apenas no vencimento. "
+        "Esta call está dentro do dinheiro com uma data ex-dividendo antes do vencimento, "
+        "então as ações têm mais chance de ser exercidas antecipadamente — o comprador "
+        "captura o dividendo, e sua posição se encerra antes do que o diagrama de payoff "
+        "pressupõe.",
+        "early_assignment_warning_body_cash_secured_put": "O comprador da opção pode "
+        "exercer este contrato a qualquer momento antes do vencimento, não apenas no "
+        "vencimento. Esta put está dentro do dinheiro com uma data ex-dividendo antes do "
+        "vencimento, então as ações têm mais chance de ser exercidas contra você "
+        "antecipadamente, encerrando sua posição antes do que o diagrama de payoff "
+        "pressupõe.",
         "expected_return_note": "Sob as próprias premissas neutras a risco do modelo, o "
         "lucro esperado de qualquer opção é aproximadamente zero menos custos de "
         "negociação — as probabilidades acima descrevem resultados prováveis, não uma "

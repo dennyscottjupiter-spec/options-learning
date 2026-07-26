@@ -133,6 +133,141 @@ def test_earnings_warning_false_when_no_earnings_date_on_file(
     assert ctx["earnings_warning"] is False
 
 
+# --- early-assignment warning: ITM short leg + ex-dividend inside window ----
+
+
+@pytest.mark.parametrize(
+    "strategy_type,option_type,strike,spot,expected",
+    [
+        ("covered_call", "call", 100.0, 110.0, True),  # ITM short call
+        ("covered_call", "call", 100.0, 90.0, False),  # OTM short call
+        ("cash_secured_put", "put", 100.0, 90.0, True),  # ITM short put
+        ("cash_secured_put", "put", 100.0, 110.0, False),  # OTM short put
+        ("long_call", "call", 100.0, 110.0, False),  # never a short option
+        ("protective_put", "put", 100.0, 90.0, False),  # never a short option
+    ],
+)
+def test_early_assignment_warning_gated_on_strategy_and_moneyness(
+    strategy_type, option_type, strike, spot, expected
+):
+    exp_date = date.today() + timedelta(days=35)
+    ex_dividend = (date.today() + timedelta(days=10)).isoformat()
+    assert (
+        report._early_assignment_warning(strategy_type, option_type, strike, spot, ex_dividend, exp_date)
+        is expected
+    )
+
+
+def test_early_assignment_warning_false_when_ex_dividend_after_expiration():
+    exp_date = date.today() + timedelta(days=35)
+    ex_dividend = (date.today() + timedelta(days=100)).isoformat()
+    assert report._early_assignment_warning("covered_call", "call", 100.0, 110.0, ex_dividend, exp_date) is False
+
+
+def test_early_assignment_warning_false_when_no_ex_dividend_date():
+    exp_date = date.today() + timedelta(days=35)
+    assert report._early_assignment_warning("covered_call", "call", 100.0, 110.0, None, exp_date) is False
+
+
+def _covered_call_chain(expiration: str, spot: float) -> list[dict]:
+    """Calls priced at `spot` (not conftest._contract's fixed SPOT=100) so the
+    synthetic chain stays internally consistent with the get_latest_price
+    override below — pricing contracts at one spot while select.py evaluates
+    them against another makes every quote look mispriced relative to
+    intrinsic value and enrich_contract discards the whole chain."""
+    from optionslab.bs import bs_price
+
+    T = (date.fromisoformat(expiration) - date.today()).days / 365.0
+    contracts = []
+    for k in range(60, 141, 5):
+        fair = float(bs_price(spot, k, T, 0.043, 0.30, "call"))
+        contracts.append(
+            {
+                "symbol": f"TST{expiration.replace('-', '')}C{int(k * 1000):08d}",
+                "underlying": "TST",
+                "expiration": expiration,
+                "type": "call",
+                "strike": float(k),
+                "bid": round(fair * 0.99, 2),
+                "ask": round(fair * 1.01, 2),
+                "bid_size": 10,
+                "ask_size": 10,
+                "last_price": round(fair, 2),
+                "implied_volatility": None,
+                "delta": None,
+                "gamma": None,
+                "theta": None,
+                "vega": None,
+                "rho": None,
+            }
+        )
+    return contracts
+
+
+def test_early_assignment_warning_true_end_to_end_for_itm_covered_call(
+    patched_config, monkeypatch: pytest.MonkeyPatch, daily_bars
+):
+    expiration = (date.today() + timedelta(days=35)).isoformat()
+    monkeypatch.setattr(market, "get_latest_price", lambda ticker: 200.0)  # ITM for every strike (max 140)
+    monkeypatch.setattr(market, "get_option_chain", lambda ticker, **kwargs: _covered_call_chain(expiration, 200.0))
+    monkeypatch.setattr(
+        market,
+        "get_account",
+        lambda: {"status": "ACTIVE", "cash": 50_000.0, "buying_power": 50_000.0, "portfolio_value": 50_000.0},
+    )
+    monkeypatch.setattr(market, "get_daily_bars", lambda ticker, **kwargs: daily_bars)
+    monkeypatch.setattr(
+        fundamentals,
+        "get_fundamentals",
+        lambda symbol: {
+            "company_name": symbol,
+            "market_cap": None,
+            "sector": None,
+            "next_earnings_date": None,
+            "next_ex_dividend_date": (date.today() + timedelta(days=10)).isoformat(),
+        },
+    )
+    ctx = report.build_report_context("TST", "covered_call", static_export=True)
+    assert ctx["early_assignment_warning"] is True
+
+    html = report.render_report_html("TST", "covered_call", mode="learn", lang="en", static_export=True, asset_prefix=".")
+    assert CATALOG["en"]["early_assignment_warning_title"] in html
+
+
+def test_early_assignment_warning_false_end_to_end_for_otm_covered_call(
+    patched_config, monkeypatch: pytest.MonkeyPatch, daily_bars
+):
+    expiration = (date.today() + timedelta(days=35)).isoformat()
+    monkeypatch.setattr(market, "get_latest_price", lambda ticker: 58.0)  # OTM for every strike (min 60)
+    monkeypatch.setattr(market, "get_option_chain", lambda ticker, **kwargs: _covered_call_chain(expiration, 58.0))
+    monkeypatch.setattr(
+        market,
+        "get_account",
+        lambda: {"status": "ACTIVE", "cash": 50_000.0, "buying_power": 50_000.0, "portfolio_value": 50_000.0},
+    )
+    monkeypatch.setattr(market, "get_daily_bars", lambda ticker, **kwargs: daily_bars)
+    monkeypatch.setattr(
+        fundamentals,
+        "get_fundamentals",
+        lambda symbol: {
+            "company_name": symbol,
+            "market_cap": None,
+            "sector": None,
+            "next_earnings_date": None,
+            "next_ex_dividend_date": (date.today() + timedelta(days=10)).isoformat(),
+        },
+    )
+    ctx = report.build_report_context("TST", "covered_call", static_export=True)
+    assert ctx["early_assignment_warning"] is False
+
+
+def test_early_assignment_warning_never_true_for_long_call(patched_config, stub_market, stub_report_data):
+    """stub_report_data's fundamentals stub has no next_ex_dividend_date key at
+    all (pre-dates this field) — build_report_context must tolerate that."""
+    ctx = report.build_report_context("TST", "long_call", static_export=True)
+    assert ctx["early_assignment_warning"] is False
+
+
 # --- payoff diagram + technical bias -----------------------------------------
 
 
