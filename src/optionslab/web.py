@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from fastapi import FastAPI, Form, Query, Request
+from fastapi import FastAPI, Form, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -100,6 +100,14 @@ def get_report(
     nav = _build_nav(ticker, strategy, mode, lang, expiration)
     in_watchlist = ticker.strip().upper() in watchlist.get_watchlist()
     html = report.render_report_html(ticker, strategy, expiration, mode, lang, nav, in_watchlist)
+    return HTMLResponse(html)
+
+
+@app.get("/source/{module}", response_class=HTMLResponse)
+def view_source(module: str):
+    html = report.render_source_html(module)
+    if html is None:
+        raise HTTPException(status_code=404)
     return HTMLResponse(html)
 
 
