@@ -268,6 +268,51 @@ def test_early_assignment_warning_never_true_for_long_call(patched_config, stub_
     assert ctx["early_assignment_warning"] is False
 
 
+# --- premium split: intrinsic/extrinsic + moneyness -------------------------
+
+
+@pytest.mark.parametrize(
+    "spot,strike,premium,option_type,atm_band_pct,expected_intrinsic,expected_moneyness",
+    [
+        (110.0, 100.0, 12.0, "call", 0.02, 10.0, "itm"),  # call ITM: intrinsic=spot-strike
+        (90.0, 100.0, 2.0, "call", 0.02, 0.0, "otm"),  # call OTM: intrinsic=0
+        (100.5, 100.0, 3.0, "call", 0.02, 0.5, "atm"),  # within +/-2% band -> ATM despite tiny intrinsic
+        (90.0, 100.0, 12.0, "put", 0.02, 10.0, "itm"),  # put ITM: intrinsic=strike-spot
+        (110.0, 100.0, 2.0, "put", 0.02, 0.0, "otm"),  # put OTM: intrinsic=0
+    ],
+)
+def test_moneyness_split_intrinsic_and_label(
+    spot, strike, premium, option_type, atm_band_pct, expected_intrinsic, expected_moneyness
+):
+    result = report._moneyness_split(spot, strike, premium, option_type, atm_band_pct)
+    assert result["intrinsic"] == pytest.approx(expected_intrinsic)
+    assert result["extrinsic"] == pytest.approx(premium - expected_intrinsic)
+    assert result["intrinsic"] + result["extrinsic"] == pytest.approx(premium)
+    assert result["moneyness"] == expected_moneyness
+
+
+def test_moneyness_split_bar_percentages_never_negative_or_over_100():
+    """A quote priced slightly below intrinsic (narrow-spread edge case) would
+    make extrinsic negative — the dollar figures should reflect that exactly,
+    but the bar's width percentages must stay within [0, 100]."""
+    result = report._moneyness_split(120.0, 100.0, 15.0, "call", 0.02)
+    assert result["extrinsic"] == pytest.approx(-5.0)  # intrinsic (20) exceeds premium (15)
+    assert 0.0 <= result["intrinsic_pct"] <= 100.0
+    assert 0.0 <= result["extrinsic_pct"] <= 100.0
+    assert result["intrinsic_pct"] + result["extrinsic_pct"] == pytest.approx(100.0)
+
+
+def test_moneyness_split_wired_into_report_context(patched_config, stub_market, stub_report_data):
+    ctx = report.build_report_context("TST", "long_call", static_export=True)
+    split = ctx["moneyness_split"]
+    assert split["intrinsic"] + split["extrinsic"] == pytest.approx(ctx["strategy"].premium)
+    assert split["moneyness"] in ("itm", "atm", "otm")
+
+    html = report.render_report_html("TST", "long_call", mode="learn", lang="en", static_export=True, asset_prefix=".")
+    assert 'class="moneyness-badge' in html
+    assert 'class="premium-split-bar"' in html
+
+
 # --- payoff diagram + technical bias -----------------------------------------
 
 

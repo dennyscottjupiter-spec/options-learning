@@ -50,6 +50,36 @@ def _env() -> Environment:
     return env
 
 
+def _moneyness_split(spot: float, strike: float, premium: float, option_type: str, atm_band_pct: float) -> dict:
+    """Splits `premium` into its intrinsic (in-the-money portion, survives to
+    expiration) and extrinsic (time/volatility value, decays to zero at
+    expiration) components, plus an ITM/ATM/OTM moneyness label — pure
+    re-presentation of numbers already in the report context, no new data.
+    Bar percentages are clamped to [0, 100] so a narrow-spread quote that
+    happens to price slightly below intrinsic can't produce a negative-width
+    bar segment; the displayed dollar figures stay exact."""
+    intrinsic = max(0.0, spot - strike) if option_type == "call" else max(0.0, strike - spot)
+    extrinsic = premium - intrinsic
+
+    if abs(spot - strike) / spot <= atm_band_pct:
+        moneyness = "atm"
+    elif (option_type == "call" and spot > strike) or (option_type == "put" and spot < strike):
+        moneyness = "itm"
+    else:
+        moneyness = "otm"
+
+    intrinsic_pct = min(100.0, max(0.0, (intrinsic / premium) * 100)) if premium else 0.0
+    extrinsic_pct = max(0.0, 100.0 - intrinsic_pct)
+
+    return {
+        "intrinsic": intrinsic,
+        "extrinsic": extrinsic,
+        "moneyness": moneyness,
+        "intrinsic_pct": intrinsic_pct,
+        "extrinsic_pct": extrinsic_pct,
+    }
+
+
 def _format_market_cap(value: float | None) -> str:
     if value is None:
         return "—"
@@ -281,6 +311,10 @@ def build_report_context(
         exp_date,
     )
 
+    moneyness_split = _moneyness_split(
+        result["spot_price"], strategy.strike, strategy.premium, strategy.option_type, cfg["report"]["atm_band_pct"]
+    )
+
     s = get_strings(lang)
     strings_dict = {**s}
 
@@ -324,6 +358,7 @@ def build_report_context(
         "payoff_svg": payoff_svg,
         "earnings_warning": earnings_warning,
         "early_assignment_warning": early_assignment_warning,
+        "moneyness_split": moneyness_split,
         "indicators": ind,
         "bias_display": s[_BIAS_KEY.get(ind["directional_bias"], "bias_insufficient")],
     }

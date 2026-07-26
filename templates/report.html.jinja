@@ -143,7 +143,7 @@
     <div class="stat-row">
       <div class="stat">
         <span class="label">{{ s.strike }}</span>
-        <span class="value">{{ strategy.strike | money }}</span>
+        <span class="value">{{ strategy.strike | money }} <span class="moneyness-badge moneyness-{{ moneyness_split.moneyness }}">{{ s["moneyness_" ~ moneyness_split.moneyness] }}</span></span>
       </div>
       <div class="stat">
         <span class="label">{{ s.expiration }}</span>
@@ -153,9 +153,17 @@
         <span class="label">{{ s.dte }}</span>
         <span class="value">{{ best.dte }}</span>
       </div>
-      <div class="stat">
+      <div class="stat stat-wide">
         <span class="label">{{ s.premium }}</span>
         <span class="value">{{ strategy.premium | money }}</span>
+        <div class="premium-split-bar">
+          <div class="premium-split-intrinsic" style="width: {{ moneyness_split.intrinsic_pct }}%"></div>
+          <div class="premium-split-extrinsic" style="width: {{ moneyness_split.extrinsic_pct }}%"></div>
+        </div>
+        <div class="premium-split-legend">
+          <span><span class="swatch swatch-intrinsic"></span>{{ s.intrinsic_value }} {{ moneyness_split.intrinsic | money }}</span>
+          <span><span class="swatch swatch-extrinsic"></span>{{ s.extrinsic_value }} {{ moneyness_split.extrinsic | money }}</span>
+        </div>
       </div>
       <div class="stat">
         <span class="label">{{ s.breakeven }}</span>
