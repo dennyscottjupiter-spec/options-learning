@@ -474,3 +474,66 @@ def test_render_report_html_smoke(patched_config, stub_market, stub_report_data,
     assert html.startswith("<!doctype html>")
     assert "</html>" in html
     assert "TST" in html
+
+
+# --- Learn-mode didactic explainers: sections + per-metric tooltips ---------
+
+_EXPLAINED_METRICS = [
+    "strike", "premium", "breakeven", "max_profit", "max_loss", "capital_required",
+    "delta", "gamma", "theta", "vega", "rho", "implied_volatility",
+    "pop_closed_form", "pop_monte_carlo", "probability_of_touch", "avg_win", "avg_loss", "score",
+    "sma20", "sma50", "sma200", "rsi14", "hv30", "hv90", "range_52w", "directional_bias",
+]
+
+_EXPLAINED_SECTIONS = [
+    "section_explain_contract",
+    "section_explain_greeks",
+    "section_explain_probability",
+    "section_explain_technical",
+]
+
+
+def test_exactly_26_metrics_have_explainer_strings_in_both_catalogs():
+    assert len(_EXPLAINED_METRICS) == 26
+    for metric in _EXPLAINED_METRICS:
+        key = f"explain_{metric}"
+        assert key in CATALOG["en"], f"missing {key} in en catalog"
+        assert key in CATALOG["pt-BR"], f"missing {key} in pt-BR catalog"
+
+
+def test_learn_mode_renders_every_section_and_metric_explainer(patched_config, stub_market, stub_report_data):
+    html = report.render_report_html("TST", "long_call", mode="learn", lang="en", static_export=True, asset_prefix=".")
+    for key in _EXPLAINED_SECTIONS:
+        assert str(escape(CATALOG["en"][key])) in html, f"missing section explainer {key}"
+    for metric in _EXPLAINED_METRICS:
+        key = f"explain_{metric}"
+        assert str(escape(CATALOG["en"][key])) in html, f"missing metric explainer {key}"
+    assert html.count('class="tip"') == len(_EXPLAINED_METRICS)
+
+
+def test_pro_mode_renders_none_of_the_new_explainers(patched_config, stub_market, stub_report_data):
+    html = report.render_report_html("TST", "long_call", mode="pro", lang="en", static_export=True, asset_prefix=".")
+    assert 'class="tip"' not in html
+    assert 'class="section-explain"' not in html
+    for key in _EXPLAINED_SECTIONS:
+        assert str(escape(CATALOG["en"][key])) not in html
+    for metric in _EXPLAINED_METRICS:
+        assert str(escape(CATALOG["en"][f"explain_{metric}"])) not in html
+
+
+def test_learn_mode_explainers_render_in_pt_too(patched_config, stub_market, stub_report_data):
+    html = report.render_report_html(
+        "TST", "long_call", mode="learn", lang="pt-BR", static_export=True, asset_prefix="."
+    )
+    assert str(escape(CATALOG["pt-BR"]["section_explain_contract"])) in html
+    assert str(escape(CATALOG["pt-BR"]["explain_delta"])) in html
+
+
+def test_tooltip_text_forced_visible_in_print_css():
+    """Regression guard for the PDF constraint: hover-only tooltips would be
+    invisible in the Playwright print route, so @media print must force
+    .tip-text to a static, always-visible block."""
+    css = (PROJECT_ROOT / "static" / "css" / "report.css").read_text(encoding="utf-8")
+    print_block = css[css.index("@media print {"):]
+    tip_rule = print_block[print_block.index(".tip-text"):]
+    assert "visibility: visible" in tip_rule.split("}")[0]

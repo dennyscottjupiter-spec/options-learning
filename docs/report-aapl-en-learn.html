@@ -20,7 +20,7 @@
   <header class="report-header">
     <div class="titles">
       <h1>AAPL — Long Call (LEAPS)</h1>
-      <p class="subtitle">Apple Inc. · Generated 2026-07-26 16:06</p>
+      <p class="subtitle">Apple Inc. · Generated 2026-07-26 16:16</p>
     </div>
     <div class="header-controls">
       <nav class="pill-toggle" aria-label="Report depth">
@@ -259,9 +259,12 @@ understanding the mechanics before you ever risk a dollar.</p>
 
   <section class="panel">
     <h2>The contract</h2>
+    
+    <p class="section-explain">This panel shows the exact option contract selected and what it&#39;s worth: the strike you&#39;re trading against, the premium you pay or collect, and the profit/loss extremes if held to expiration.</p>
+    
     <div class="stat-row">
       <div class="stat">
-        <span class="label">Strike</span>
+        <span class="label">Strike<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The fixed price at which you may buy (call) or sell (put) the shares if the option is exercised.</span></span></span>
         <span class="value">$300.00 <span class="moneyness-badge moneyness-itm">ITM</span></span>
       </div>
       <div class="stat">
@@ -273,7 +276,7 @@ understanding the mechanics before you ever risk a dollar.</p>
         <span class="value">326</span>
       </div>
       <div class="stat stat-wide">
-        <span class="label">Premium</span>
+        <span class="label">Premium<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">What you pay or receive for this contract today, split below into its intrinsic and extrinsic parts.</span></span></span>
         <span class="value">$62.17</span>
         <div class="premium-split-bar">
           <div class="premium-split-intrinsic" style="width: 53.11243364967023%"></div>
@@ -285,23 +288,23 @@ understanding the mechanics before you ever risk a dollar.</p>
         </div>
       </div>
       <div class="stat">
-        <span class="label">Breakeven</span>
+        <span class="label">Breakeven<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The strike adjusted for the premium paid or received — the price the stock actually needs to clear for this trade to make or lose nothing.</span></span></span>
         <span class="value">$362.17</span>
       </div>
       <div class="stat">
-        <span class="label">Max profit</span>
+        <span class="label">Max profit<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The best possible outcome for this position if held to expiration, before commissions.</span></span></span>
         <span class="value pl-positive">
           Unlimited
         </span>
         
       </div>
       <div class="stat">
-        <span class="label">Max loss</span>
+        <span class="label">Max loss<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The worst possible outcome for this position if held to expiration, before commissions.</span></span></span>
         <span class="value pl-negative">-$6,217.00</span>
         <span class="caption">Net of commissions: -$6,218.30</span>
       </div>
       <div class="stat">
-        <span class="label">Capital required</span>
+        <span class="label">Capital required<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The cash or margin this trade ties up — used as the denominator for the risk-adjusted score below.</span></span></span>
         <span class="value">$6,217.00</span>
       </div>
     </div>
@@ -313,29 +316,32 @@ understanding the mechanics before you ever risk a dollar.</p>
 
   <section class="panel">
     <h2>Greeks &amp; implied volatility</h2>
+    
+    <p class="section-explain">Greeks measure how the option&#39;s price reacts to changes in the stock price, time, and volatility. Implied volatility is the market&#39;s own estimate of how much the stock might move before expiration.</p>
+    
     <div class="stat-row">
       <div class="stat">
-        <span class="label">Delta</span>
+        <span class="label">Delta<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">How much the option&#39;s price moves per $1 move in the stock. Also read as a rough chance of finishing in-the-money.</span></span></span>
         <span class="value ">0.741</span>
       </div>
       <div class="stat">
-        <span class="label">Gamma</span>
+        <span class="label">Gamma<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">How fast delta itself changes as the stock price moves — higher gamma means delta shifts more quickly.</span></span></span>
         <span class="value ">0.0034</span>
       </div>
       <div class="stat">
-        <span class="label">Theta (per day)</span>
+        <span class="label">Theta (per day)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The value this option loses each day purely from time passing, holding the stock price and volatility fixed.</span></span></span>
         <span class="value ">-0.068</span>
       </div>
       <div class="stat">
-        <span class="label">Vega (per 1% vol)</span>
+        <span class="label">Vega (per 1% vol)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">How much the option&#39;s price moves for a 1-percentage-point change in implied volatility.</span></span></span>
         <span class="value ">1.022</span>
       </div>
       <div class="stat">
-        <span class="label">Rho (per 1% rate)</span>
+        <span class="label">Rho (per 1% rate)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">How much the option&#39;s price moves for a 1-percentage-point change in interest rates — usually the smallest effect of the five Greeks.</span></span></span>
         <span class="value ">1.658</span>
       </div>
       <div class="stat">
-        <span class="label">Implied volatility</span>
+        <span class="label">Implied volatility<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The market&#39;s own expectation of how much the stock will swing before expiration, implied by this contract&#39;s price.</span></span></span>
         <span class="value ">30.0%</span>
       </div>
     </div>
@@ -348,29 +354,32 @@ understanding the mechanics before you ever risk a dollar.</p>
 
   <section class="panel">
     <h2>Probability of profit</h2>
+    
+    <p class="section-explain">These figures estimate how likely this trade is to be profitable, using two independent methods — a closed-form formula and a Monte Carlo simulation — so you can see where they agree, and where they don&#39;t.</p>
+    
     <div class="stat-row">
       <div class="stat">
-        <span class="label">Closed-form (lognormal)</span>
+        <span class="label">Closed-form (lognormal)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The probability this trade is at least break-even at expiration, from a closed-form formula assuming lognormal stock prices.</span></span></span>
         <span class="value">38.1%</span>
       </div>
       <div class="stat">
-        <span class="label">Monte Carlo (100,000 paths)</span>
+        <span class="label">Monte Carlo (100,000 paths)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The same probability of profit, estimated instead by simulating thousands of random price paths — a cross-check on the formula above.</span></span></span>
         <span class="value">38.1%</span>
       </div>
       <div class="stat">
-        <span class="label">Probability of touching breakeven before expiration</span>
+        <span class="label">Probability of touching breakeven before expiration<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The chance the price reaches breakeven at any point before expiration — always higher than the chance it finishes there, since it only needs to happen once.</span></span></span>
         <span class="value">73.7%</span>
       </div>
       <div class="stat">
-        <span class="label">Average win (simulated)</span>
+        <span class="label">Average win (simulated)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The average profit across simulated paths that end up profitable.</span></span></span>
         <span class="value pl-positive">$8,524.33</span>
       </div>
       <div class="stat">
-        <span class="label">Average loss (simulated)</span>
+        <span class="label">Average loss (simulated)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The average loss across simulated paths that end up unprofitable.</span></span></span>
         <span class="value pl-negative">-$4,941.21</span>
       </div>
       <div class="stat">
-        <span class="label">Risk-adjusted score (annualized)</span>
+        <span class="label">Risk-adjusted score (annualized)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Risk-adjusted return per dollar at risk, annualized — the metric used to rank this contract against its alternatives.</span></span></span>
         <span class="value">0.0330</span>
       </div>
     </div>
@@ -440,39 +449,42 @@ understanding the mechanics before you ever risk a dollar.</p>
 
   <section class="panel">
     <h2>Technical snapshot</h2>
+    
+    <p class="section-explain">A snapshot of the stock&#39;s recent price trend and volatility, used only to judge whether the current setup lines up with the strategy&#39;s assumptions — not to predict where the price is going.</p>
+    
     <div class="stat-row">
       <div class="stat">
-        <span class="label">SMA 20</span>
+        <span class="label">SMA 20<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The stock&#39;s average closing price over the last 20 trading days — a short-term trend line.</span></span></span>
         <span class="value">$314.39</span>
       </div>
       <div class="stat">
-        <span class="label">SMA 50</span>
+        <span class="label">SMA 50<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The stock&#39;s average closing price over the last 50 trading days — a medium-term trend line.</span></span></span>
         <span class="value">$306.23</span>
       </div>
       <div class="stat">
-        <span class="label">SMA 200</span>
+        <span class="label">SMA 200<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The stock&#39;s average closing price over the last 200 trading days — a long-term trend line.</span></span></span>
         <span class="value">$275.98</span>
       </div>
       <div class="stat">
-        <span class="label">RSI (14)</span>
+        <span class="label">RSI (14)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Relative Strength Index over 14 days: a momentum gauge from 0-100, where readings above 70 suggest overbought and below 30 suggest oversold.</span></span></span>
         <span class="value">65.2</span>
       </div>
       <div class="stat">
-        <span class="label">Historical volatility (30d)</span>
+        <span class="label">Historical volatility (30d)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">How much the stock actually moved over the last 30 days, annualized — compare against implied volatility above to see whether options are pricing in more or less movement than has actually occurred.</span></span></span>
         <span class="value">33.6%</span>
         <span class="caption">94 percentile of the past year</span>
       </div>
       <div class="stat">
-        <span class="label">Historical volatility (90d)</span>
+        <span class="label">Historical volatility (90d)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The same historical volatility measure over a longer, 90-day window, smoothing out short-term noise.</span></span></span>
         <span class="value">26.9%</span>
         <span class="caption">99 percentile of the past year</span>
       </div>
       <div class="stat">
-        <span class="label">52-week range</span>
+        <span class="label">52-week range<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">The stock&#39;s lowest and highest closing prices over the past year.</span></span></span>
         <span class="value" style="font-size: 15px;">$202.38 – $333.74</span>
       </div>
       <div class="stat">
-        <span class="label">Directional bias</span>
+        <span class="label">Directional bias<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">A simple read of trend direction from where the price sits relative to its moving averages — not a prediction, just current positioning.</span></span></span>
         <span class="value" style="font-size: 15px;">Bullish (price above rising averages)</span>
       </div>
     </div>
