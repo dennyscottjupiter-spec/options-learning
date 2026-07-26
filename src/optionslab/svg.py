@@ -14,11 +14,11 @@ import numpy as np
 
 # Palette — must match static/css/report.css exactly (the ribbon is decorative
 # but the P/L colors are semantic and used nowhere else, per the design brief).
-INK = "#0B1120"
+INK = "#000000"
 INDIGO = "#4338CA"
 MINT = "#0E9F6E"
 CORAL = "#E5484D"
-HAIRLINE = "#E3E8EF"
+HAIRLINE = "#E4D6B8"
 MUTED = "#64748B"
 
 _WIDTH = 760
