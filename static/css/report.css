@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --paper: #F2F4F7;
-  --panel: #FFFFFF;
-  --hairline: #E3E8EF;
-  --ink: #0B1120;
+  --paper: #F3E9D3;
+  --panel: #FBF6EA;
+  --hairline: #E4D6B8;
+  --ink: #000000;
   --indigo: #4338CA;
   --indigo-soft: #EEF0FD;
   --mint: #0E9F6E;
@@ -49,6 +49,31 @@ html, body {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ---------- Light mode — warm sepia parchment with a star-chart wash,
+   built the same way as the dark starfield (pure CSS gradients, no image
+   files) so it stays self-contained for PDF export and static export. ---------- */
+
+:root[data-theme="light"] body {
+  background-color: #F3E9D3;
+  background-image:
+    radial-gradient(1px 1px at 12px 18px, rgba(27,20,10,.28) 0, transparent 60%),
+    radial-gradient(1px 1px at 92px 64px, rgba(27,20,10,.22) 0, transparent 60%),
+    radial-gradient(1.5px 1.5px at 150px 22px, rgba(27,20,10,.26) 0, transparent 60%),
+    radial-gradient(1px 1px at 45px 120px, rgba(27,20,10,.18) 0, transparent 60%),
+    radial-gradient(1px 1px at 175px 150px, rgba(27,20,10,.24) 0, transparent 60%),
+    radial-gradient(1px 1px at 210px 90px, rgba(27,20,10,.16) 0, transparent 60%),
+    radial-gradient(2px 2px at 300px 250px, rgba(27,20,10,.28) 0, transparent 60%),
+    radial-gradient(1px 1px at 380px 60px, rgba(27,20,10,.18) 0, transparent 60%),
+    radial-gradient(1px 1px at 420px 300px, rgba(27,20,10,.2) 0, transparent 60%),
+    radial-gradient(1.5px 1.5px at 480px 180px, rgba(27,20,10,.24) 0, transparent 60%),
+    radial-gradient(ellipse 1200px 800px at 50% -10%, #FFF7E4 0%, transparent 65%),
+    linear-gradient(180deg, #FBF3E0 0%, #F3E9D3 55%, #ECDCB5 100%);
+  background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat;
+  background-size: 220px 220px, 220px 220px, 220px 220px, 220px 220px, 220px 220px,
+    220px 220px, 500px 500px, 500px 500px, 500px 500px, 500px 500px, 100% 100%, 100% 100%;
+  background-attachment: fixed;
 }
 
 :root[data-theme="dark"] body {
