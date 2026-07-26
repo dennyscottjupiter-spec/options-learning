@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Options Lab</title>
+<script>
+(function () {
+  var t = localStorage.getItem("optionslab-theme");
+  if (!t) { t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; }
+  document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+<link rel="stylesheet" href="css/report.css">
+<script src="js/theme.js"></script>
+</head>
+<body>
+<div class="page">
+
+  <header class="report-header">
+    <div class="titles">
+      <h1>Options Lab</h1>
+      <p class="subtitle">Learn options mechanics on real contracts, before risking real money.</p>
+    </div>
+    <div class="header-controls">
+      
+      <button type="button" class="help-toggle" onclick="document.getElementById('help-modal').showModal()" aria-label="Help">
+  <img src="./img/about.jpg" alt="">
+</button>
+      <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+  <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+  </svg>
+  <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+  </svg>
+</button>
+    </div>
+  </header>
+
+  <dialog id="help-modal" class="help-modal">
+  <div class="help-modal-inner">
+    <button type="button" class="help-modal-close" onclick="document.getElementById('help-modal').close()" aria-label="Close">×</button>
+    
+      <h2>How to read this app</h2>
+<p class="help-lede">A short, foundational reference for every number this tool shows you.
+Read it once, then use it as a glossary whenever a term doesn't ring a bell.</p>
+
+<h3>What an option actually is</h3>
+<p>A <strong>call</strong> is the right (not the obligation) to <em>buy</em> 100 shares at a fixed
+price (the <strong>strike</strong>) any time before an <strong>expiration</strong> date. A
+<strong>put</strong> is the right to <em>sell</em> at that fixed price. You pay a <strong>premium</strong>
+today for that right — the option's price, quoted per share but always representing a 100-share
+contract, so a $2.00 premium costs $200 out of pocket.</p>
+
+<h3>The four strategies this tool builds</h3>
+<ul class="help-list">
+  <li><strong>Long Call (LEAPS)</strong> — buy a call far out (6–24 months) to lock in today's
+  price on a stock you want to own more of later, paying a fraction of the share price instead of
+  the full amount. Max loss is the premium; upside is unlimited.</li>
+  <li><strong>Cash-Secured Put</strong> — sell a put, setting aside the full strike × 100 in cash.
+  You collect the premium now. Worst case, you're forced to buy the stock at the strike — a stock
+  you already wanted, at a discount.</li>
+  <li><strong>Covered Call</strong> — sell a call against 100 shares you already own. You collect
+  premium; in exchange, you cap your upside above the strike. Turns idle shares into income.</li>
+  <li><strong>Protective Put</strong> — buy a put against shares you already own, as insurance. It
+  floors your downside for the cost of the premium, while your upside stays fully open.</li>
+</ul>
+
+<h3>Fundamentals panel</h3>
+<p><strong>Spot price</strong> is the stock's most recent close — the number every other
+calculation in this report is built from. <strong>Sector</strong> and <strong>market cap</strong>
+give quick context on the kind of company and its size. <strong>Next earnings</strong> matters more
+than it looks: a surprise earnings move can swing the stock far more than a normal trading day.</p>
+
+<h3>Warnings</h3>
+<p>This tool never hides a bad contract — it flags it and lets you see why. An
+<strong>earnings warning</strong> means the contract expires after the next earnings date, so both
+the price and the probability estimates below are less reliable across that date (implied
+volatility usually collapses the morning after — an effect called <em>IV crush</em>). A
+<strong>liquidity warning</strong> means the bid-ask spread or quoted size is thin, so you'd likely
+give up more to the spread than a more liquid strike would cost. An <strong>affordability
+warning</strong> means the trade needs more capital than your paper account's current buying
+power.</p>
+
+<h3>The contract</h3>
+<ul class="help-list">
+  <li><strong>Strike</strong> — the fixed price written into the contract.</li>
+  <li><strong>Breakeven</strong> — the strike adjusted for the premium paid or received. This, not
+  the strike, is the price the position actually needs to clear to turn a profit.</li>
+  <li><strong>Premium</strong> — what the option costs (or pays you) today, per contract
+  (×100 shares).</li>
+  <li><strong>Max profit / max loss</strong> — the best and worst dollar outcomes at expiration.</li>
+  <li><strong>Capital required</strong> — cash or margin the position ties up (full strike × 100 for
+  a cash-secured put; the premium for a long call or protective put).</li>
+</ul>
+
+<h3>Greeks & implied volatility</h3>
+<p>The Greeks describe how the option's price reacts to changes in the world — each one isolates
+one variable.</p>
+<ul class="help-list">
+  <li><strong>Delta</strong> — how much the option's price moves per $1 move in the stock.
+  Roughly doubles as "probability this option finishes in-the-money." A 0.30 delta call behaves
+  like owning 30 shares.</li>
+  <li><strong>Gamma</strong> — how fast delta itself changes as the stock moves. High gamma means
+  the position's directional exposure can shift quickly.</li>
+  <li><strong>Theta</strong> — how much value the option loses per calendar day, all else equal.
+  This is the "time decay" every options trader has to respect — it works against option buyers
+  and for option sellers.</li>
+  <li><strong>Vega</strong> — how much the option's price moves per 1 percentage point change in
+  implied volatility. Long options gain value when volatility rises; short options lose value.</li>
+  <li><strong>Rho</strong> — sensitivity to interest rates. Usually the smallest effect of the five,
+  more relevant for long-dated LEAPS than short-dated trades.</li>
+  <li><strong>Implied volatility (IV)</strong> — the market's forecast of how much the stock will
+  swing, backed out of the option's price. Higher IV means richer premiums and wider expected
+  moves.</li>
+</ul>
+<p>Whenever Alpaca doesn't quote Greeks for a contract (common on illiquid or same-day
+expirations), this tool computes them locally with its own Black-Scholes engine and labels them
+"calculated locally" — so you always know whether a number came from the market or from a model.</p>
+
+<h3>Probability of profit</h3>
+<p>This is the section with the highest bar for rigor in the whole report — see the
+<strong>Methodology</strong> block beneath it on every report for the exact formula and source file
+behind each figure below. In plain language:</p>
+<ul class="help-list">
+  <li><strong>Closed-form (lognormal)</strong> — a textbook formula (Black-Scholes' own
+  probability term) assuming the stock's future price follows a lognormal distribution. Fast,
+  exact given that assumption, and the industry-standard first answer.</li>
+  <li><strong>Monte Carlo</strong> — instead of trusting the formula, this tool actually simulates
+  100,000 possible future price paths for the stock and counts how often the position ends
+  profitable. It's the same assumption as the closed-form (geometric Brownian motion), verified by
+  brute force rather than algebra — if the two disagree by more than a hair, the report says so.</li>
+  <li><strong>Probability of touch</strong> — closed-form and Monte Carlo both answer "where does
+  the price end up at expiration?" This one asks a different, often more practical question:
+  "does the price touch breakeven at any point before expiration?" It's usually higher than the
+  terminal probability, since a price can touch a level and come back.</li>
+  <li><strong>Average win / average loss</strong> — from the same 100,000 simulated paths, the
+  average dollar outcome across the paths that ended profitable, and across the ones that didn't.</li>
+  <li><strong>Risk-adjusted score</strong> — combines probability, average win, average loss, and
+  capital at risk into one annualized number, used to rank candidate contracts against each other.
+  It answers "which contract offers the best return per dollar risked per year," not "which
+  contract will win."</li>
+</ul>
+<p>One honest caveat that applies to all of the above: under the model's own risk-neutral
+assumptions, every option's <em>expected</em> profit is approximately zero minus trading costs.
+These probabilities describe likely outcomes under the market's current pricing — they are not a
+positive edge. A profitable trade ultimately requires a directional view this model does not
+have.</p>
+
+<h3>Technical snapshot</h3>
+<ul class="help-list">
+  <li><strong>SMA 20 / 50 / 200</strong> — simple moving averages over the last 20, 50, and 200
+  trading days. Price stacked above rising averages is the classic textbook definition of an
+  uptrend.</li>
+  <li><strong>RSI (14)</strong> — Relative Strength Index, a 0–100 momentum gauge. Traditionally,
+  above 70 is considered "overbought" and below 30 "oversold," though strong trends can stay
+  extreme for a long time.</li>
+  <li><strong>Historical volatility (30d / 90d)</strong> — how much the stock has actually moved,
+  annualized, over the trailing 30 and 90 days — the realized counterpart to implied volatility.
+  The percentile shown ranks the current reading against the past year, so you can tell if today's
+  volatility is unusually calm or unusually wild for this particular stock.</li>
+  <li><strong>52-week range</strong> — the lowest and highest close in the past year.</li>
+  <li><strong>Directional bias</strong> — a simple read from how the moving averages are stacked:
+  bullish, bearish, mixed, or not enough history yet.</li>
+</ul>
+
+<h3>Using this tool responsibly</h3>
+<p>Every trade in this app runs against Alpaca's <strong>paper trading</strong> account — real
+market data, zero real money. That's deliberate: the fastest way to build real intuition for
+options is to watch many contracts play out without the cost of being wrong. Nothing here is
+investment advice, and no order is ever placed automatically — this is a learning environment for
+understanding the mechanics before you ever risk a dollar.</p>
+    
+  </div>
+</dialog>
+
+  <div class="warning static-demo">
+    <h3>◆ Static demo — frozen sample data</h3>
+    <p>This page is a snapshot for portfolio purposes, not the live app. The real tool runs locally, pulling live prices and option chains from Alpaca&#39;s paper trading API, with a full watchlist dashboard and PDF export.</p>
+  </div>
+
+  <section class="panel">
+    <h2>Analyze a ticker</h2>
+    <p class="blurb">Below is a real, frozen snapshot of the report page — payoff diagram, Greeks, probability of profit, and the full transparency methodology. Try dark mode above, then open the sample (it links out to a Portuguese version and a Pro-mode view too).</p>
+    <a class="btn-primary" href="report-aapl-en-learn.html">Open the sample report →</a>
+  </section>
+
+  <p class="footer-note">Educational tool only. Data from Alpaca&#39;s paper trading API and yfinance. Not investment advice — this is a practice environment for learning options mechanics, not a signal to trade real money.</p>
+
+</div>
+</body>
+</html>

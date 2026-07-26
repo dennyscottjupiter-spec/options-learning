@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ s.app_title }}</title>
+<script>
+(function () {
+  var t = localStorage.getItem("optionslab-theme");
+  if (!t) { t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; }
+  document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+<link rel="stylesheet" href="css/report.css">
+<script src="js/theme.js"></script>
+</head>
+<body>
+<div class="page">
+
+  <header class="report-header">
+    <div class="titles">
+      <h1>{{ s.app_title }}</h1>
+      <p class="subtitle">{{ s.app_tagline }}</p>
+    </div>
+    <div class="header-controls">
+      {% set asset_prefix = "." %}
+      {% include "_help_toggle.html.jinja" %}
+      {% include "_theme_toggle.html.jinja" %}
+    </div>
+  </header>
+
+  {% include "_help_modal.html.jinja" %}
+
+  <div class="warning static-demo">
+    <h3>◆ {{ s.static_demo_title }}</h3>
+    <p>{{ s.static_demo_body }}</p>
+  </div>
+
+  <section class="panel">
+    <h2>{{ s.home_analyze_title }}</h2>
+    <p class="blurb">{{ s.static_index_intro }}</p>
+    <a class="btn-primary" href="report-aapl-en-learn.html">{{ s.static_index_cta }} →</a>
+  </section>
+
+  <p class="footer-note">{{ s.footer_disclaimer }}</p>
+
+</div>
+</body>
+</html>

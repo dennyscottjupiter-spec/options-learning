@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Options Analysis — AAPL</title>
+<script>
+(function () {
+  var t = localStorage.getItem("optionslab-theme");
+  if (!t) { t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; }
+  document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+<link rel="stylesheet" href="./css/report.css">
+<script src="./js/theme.js"></script>
+</head>
+<body>
+<div class="page">
+
+  <header class="report-header">
+    <div class="titles">
+      <h1>AAPL — Long Call (LEAPS)</h1>
+      <p class="subtitle">Apple Inc. · Generated 2026-07-26 07:22</p>
+    </div>
+    <div class="header-controls">
+      <nav class="pill-toggle" aria-label="Report depth">
+        <a href="report-aapl-en-learn.html" class="active">Learn</a>
+        <a href="report-aapl-en-pro.html" class="">Pro</a>
+      </nav>
+      <a class="flag-toggle" href="report-aapl-pt-learn.html"><svg class="flag-icon" width="20" height="14" viewBox="0 0 20 14" aria-hidden="true">
+  <rect width="20" height="14" rx="2" fill="#009739"></rect>
+  <polygon points="10,2 18,7 10,12 2,7" fill="#FEDD00"></polygon>
+  <circle cx="10" cy="7" r="3" fill="#012169"></circle>
+</svg> Português</a>
+      <button type="button" class="help-toggle" onclick="document.getElementById('help-modal').showModal()" aria-label="Help">
+  <img src="./img/about.jpg" alt="">
+</button>
+      <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+  <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+  </svg>
+  <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+  </svg>
+</button>
+    </div>
+  </header>
+
+  <dialog id="help-modal" class="help-modal">
+  <div class="help-modal-inner">
+    <button type="button" class="help-modal-close" onclick="document.getElementById('help-modal').close()" aria-label="Close">×</button>
+    
+      <h2>How to read this app</h2>
+<p class="help-lede">A short, foundational reference for every number this tool shows you.
+Read it once, then use it as a glossary whenever a term doesn't ring a bell.</p>
+
+<h3>What an option actually is</h3>
+<p>A <strong>call</strong> is the right (not the obligation) to <em>buy</em> 100 shares at a fixed
+price (the <strong>strike</strong>) any time before an <strong>expiration</strong> date. A
+<strong>put</strong> is the right to <em>sell</em> at that fixed price. You pay a <strong>premium</strong>
+today for that right — the option's price, quoted per share but always representing a 100-share
+contract, so a $2.00 premium costs $200 out of pocket.</p>
+
+<h3>The four strategies this tool builds</h3>
+<ul class="help-list">
+  <li><strong>Long Call (LEAPS)</strong> — buy a call far out (6–24 months) to lock in today's
+  price on a stock you want to own more of later, paying a fraction of the share price instead of
+  the full amount. Max loss is the premium; upside is unlimited.</li>
+  <li><strong>Cash-Secured Put</strong> — sell a put, setting aside the full strike × 100 in cash.
+  You collect the premium now. Worst case, you're forced to buy the stock at the strike — a stock
+  you already wanted, at a discount.</li>
+  <li><strong>Covered Call</strong> — sell a call against 100 shares you already own. You collect
+  premium; in exchange, you cap your upside above the strike. Turns idle shares into income.</li>
+  <li><strong>Protective Put</strong> — buy a put against shares you already own, as insurance. It
+  floors your downside for the cost of the premium, while your upside stays fully open.</li>
+</ul>
+
+<h3>Fundamentals panel</h3>
+<p><strong>Spot price</strong> is the stock's most recent close — the number every other
+calculation in this report is built from. <strong>Sector</strong> and <strong>market cap</strong>
+give quick context on the kind of company and its size. <strong>Next earnings</strong> matters more
+than it looks: a surprise earnings move can swing the stock far more than a normal trading day.</p>
+
+<h3>Warnings</h3>
+<p>This tool never hides a bad contract — it flags it and lets you see why. An
+<strong>earnings warning</strong> means the contract expires after the next earnings date, so both
+the price and the probability estimates below are less reliable across that date (implied
+volatility usually collapses the morning after — an effect called <em>IV crush</em>). A
+<strong>liquidity warning</strong> means the bid-ask spread or quoted size is thin, so you'd likely
+give up more to the spread than a more liquid strike would cost. An <strong>affordability
+warning</strong> means the trade needs more capital than your paper account's current buying
+power.</p>
+
+<h3>The contract</h3>
+<ul class="help-list">
+  <li><strong>Strike</strong> — the fixed price written into the contract.</li>
+  <li><strong>Breakeven</strong> — the strike adjusted for the premium paid or received. This, not
+  the strike, is the price the position actually needs to clear to turn a profit.</li>
+  <li><strong>Premium</strong> — what the option costs (or pays you) today, per contract
+  (×100 shares).</li>
+  <li><strong>Max profit / max loss</strong> — the best and worst dollar outcomes at expiration.</li>
+  <li><strong>Capital required</strong> — cash or margin the position ties up (full strike × 100 for
+  a cash-secured put; the premium for a long call or protective put).</li>
+</ul>
+
+<h3>Greeks & implied volatility</h3>
+<p>The Greeks describe how the option's price reacts to changes in the world — each one isolates
+one variable.</p>
+<ul class="help-list">
+  <li><strong>Delta</strong> — how much the option's price moves per $1 move in the stock.
+  Roughly doubles as "probability this option finishes in-the-money." A 0.30 delta call behaves
+  like owning 30 shares.</li>
+  <li><strong>Gamma</strong> — how fast delta itself changes as the stock moves. High gamma means
+  the position's directional exposure can shift quickly.</li>
+  <li><strong>Theta</strong> — how much value the option loses per calendar day, all else equal.
+  This is the "time decay" every options trader has to respect — it works against option buyers
+  and for option sellers.</li>
+  <li><strong>Vega</strong> — how much the option's price moves per 1 percentage point change in
+  implied volatility. Long options gain value when volatility rises; short options lose value.</li>
+  <li><strong>Rho</strong> — sensitivity to interest rates. Usually the smallest effect of the five,
+  more relevant for long-dated LEAPS than short-dated trades.</li>
+  <li><strong>Implied volatility (IV)</strong> — the market's forecast of how much the stock will
+  swing, backed out of the option's price. Higher IV means richer premiums and wider expected
+  moves.</li>
+</ul>
+<p>Whenever Alpaca doesn't quote Greeks for a contract (common on illiquid or same-day
+expirations), this tool computes them locally with its own Black-Scholes engine and labels them
+"calculated locally" — so you always know whether a number came from the market or from a model.</p>
+
+<h3>Probability of profit</h3>
+<p>This is the section with the highest bar for rigor in the whole report — see the
+<strong>Methodology</strong> block beneath it on every report for the exact formula and source file
+behind each figure below. In plain language:</p>
+<ul class="help-list">
+  <li><strong>Closed-form (lognormal)</strong> — a textbook formula (Black-Scholes' own
+  probability term) assuming the stock's future price follows a lognormal distribution. Fast,
+  exact given that assumption, and the industry-standard first answer.</li>
+  <li><strong>Monte Carlo</strong> — instead of trusting the formula, this tool actually simulates
+  100,000 possible future price paths for the stock and counts how often the position ends
+  profitable. It's the same assumption as the closed-form (geometric Brownian motion), verified by
+  brute force rather than algebra — if the two disagree by more than a hair, the report says so.</li>
+  <li><strong>Probability of touch</strong> — closed-form and Monte Carlo both answer "where does
+  the price end up at expiration?" This one asks a different, often more practical question:
+  "does the price touch breakeven at any point before expiration?" It's usually higher than the
+  terminal probability, since a price can touch a level and come back.</li>
+  <li><strong>Average win / average loss</strong> — from the same 100,000 simulated paths, the
+  average dollar outcome across the paths that ended profitable, and across the ones that didn't.</li>
+  <li><strong>Risk-adjusted score</strong> — combines probability, average win, average loss, and
+  capital at risk into one annualized number, used to rank candidate contracts against each other.
+  It answers "which contract offers the best return per dollar risked per year," not "which
+  contract will win."</li>
+</ul>
+<p>One honest caveat that applies to all of the above: under the model's own risk-neutral
+assumptions, every option's <em>expected</em> profit is approximately zero minus trading costs.
+These probabilities describe likely outcomes under the market's current pricing — they are not a
+positive edge. A profitable trade ultimately requires a directional view this model does not
+have.</p>
+
+<h3>Technical snapshot</h3>
+<ul class="help-list">
+  <li><strong>SMA 20 / 50 / 200</strong> — simple moving averages over the last 20, 50, and 200
+  trading days. Price stacked above rising averages is the classic textbook definition of an
+  uptrend.</li>
+  <li><strong>RSI (14)</strong> — Relative Strength Index, a 0–100 momentum gauge. Traditionally,
+  above 70 is considered "overbought" and below 30 "oversold," though strong trends can stay
+  extreme for a long time.</li>
+  <li><strong>Historical volatility (30d / 90d)</strong> — how much the stock has actually moved,
+  annualized, over the trailing 30 and 90 days — the realized counterpart to implied volatility.
+  The percentile shown ranks the current reading against the past year, so you can tell if today's
+  volatility is unusually calm or unusually wild for this particular stock.</li>
+  <li><strong>52-week range</strong> — the lowest and highest close in the past year.</li>
+  <li><strong>Directional bias</strong> — a simple read from how the moving averages are stacked:
+  bullish, bearish, mixed, or not enough history yet.</li>
+</ul>
+
+<h3>Using this tool responsibly</h3>
+<p>Every trade in this app runs against Alpaca's <strong>paper trading</strong> account — real
+market data, zero real money. That's deliberate: the fastest way to build real intuition for
+options is to watch many contracts play out without the cost of being wrong. Nothing here is
+investment advice, and no order is ever placed automatically — this is a learning environment for
+understanding the mechanics before you ever risk a dollar.</p>
+    
+  </div>
+</dialog>
+
+  <section class="panel">
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">Spot price</span>
+        <span class="value">$333.02</span>
+      </div>
+      <div class="stat">
+        <span class="label">Sector</span>
+        <span class="value" style="font-family: var(--font-body); font-size: 15px;">Technology</span>
+      </div>
+      <div class="stat">
+        <span class="label">Market cap</span>
+        <span class="value">$4.89T</span>
+      </div>
+      <div class="stat">
+        <span class="label">Next earnings</span>
+        <span class="value" style="font-size: 15px;">2026-07-30</span>
+      </div>
+    </div>
+  </section>
+
+  
+  <div class="warning static-demo">
+    <h3>◆ Static demo — frozen sample data</h3>
+    <p>This page is a snapshot for portfolio purposes, not the live app. The real tool runs locally, pulling live prices and option chains from Alpaca&#39;s paper trading API, with a full watchlist dashboard and PDF export. <a href="index.html">← Dashboard</a></p>
+  </div>
+  
+
+  
+  <div class="warning earnings">
+    <h3>⚠ Earnings inside this window</h3>
+    <p>This contract&#39;s expiration is after the next earnings date. Earnings moves are unpredictable and implied volatility typically collapses the morning after the report (an effect called IV crush) — both the price and the probability estimates above are less reliable across an earnings date than they are for an ordinary stretch of trading.</p>
+  </div>
+  
+
+  
+
+  
+
+  <section class="panel">
+    <h2>Long Call (LEAPS)</h2>
+    <p class="blurb">Buy the right to purchase the stock at today&#39;s price, months or years from now, paying only a fraction of the share price in premium. This is the &#39;acquire it cheaper later&#39; play: if the stock rises, you profit far more than owning shares outright would have cost you; if it doesn&#39;t, the most you lose is the premium.</p>
+    <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" class="payoff-svg" role="img"
+     aria-label="Payoff diagram with probability ribbon">
+  <rect x="0" y="0" width="760" height="360" fill="white" />
+  <line x1="64" y1="312.0" x2="736" y2="312.0" stroke="#E3E8EF" stroke-width="1" /><text x="54" y="316.0" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#64748B">-6,839</text><line x1="64" y1="240.0" x2="736" y2="240.0" stroke="#E3E8EF" stroke-width="1" /><text x="54" y="244.0" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#64748B">+349</text><line x1="64" y1="168.0" x2="736" y2="168.0" stroke="#E3E8EF" stroke-width="1" /><text x="54" y="172.0" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#64748B">+7,536</text><line x1="64" y1="96.0" x2="736" y2="96.0" stroke="#E3E8EF" stroke-width="1" /><text x="54" y="100.0" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#64748B">+14,724</text><line x1="64" y1="24.0" x2="736" y2="24.0" stroke="#E3E8EF" stroke-width="1" /><text x="54" y="28.0" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#64748B">+21,911</text>
+
+  <path d="M 64.0,312.0 L 64.0,301.5 67.1,300.6 70.1,299.6 73.2,298.6 76.3,297.5 79.3,296.4 82.4,295.3 85.5,294.0 88.5,292.8 91.6,291.5 94.7,290.1 97.8,288.7 100.8,287.2 103.9,285.7 107.0,284.1 110.0,282.5 113.1,280.9 116.2,279.2 119.2,277.5 122.3,275.8 125.4,274.0 128.4,272.2 131.5,270.3 134.6,268.5 137.6,266.6 140.7,264.7 143.8,262.7 146.8,260.8 149.9,258.8 153.0,256.9 156.1,254.9 159.1,252.9 162.2,251.0 165.3,249.0 168.3,247.0 171.4,245.1 174.5,243.1 177.5,241.2 180.6,239.3 183.7,237.4 186.7,235.5 189.8,233.7 192.9,231.8 195.9,230.1 199.0,228.3 202.1,226.6 205.2,224.9 208.2,223.2 211.3,221.6 214.4,220.0 217.4,218.5 220.5,217.0 223.6,215.6 226.6,214.2 229.7,212.8 232.8,211.5 235.8,210.3 238.9,209.1 242.0,208.0 245.0,206.9 248.1,205.8 251.2,204.9 254.2,203.9 257.3,203.1 260.4,202.3 263.5,201.5 266.5,200.8 269.6,200.2 272.7,199.6 275.7,199.1 278.8,198.6 281.9,198.2 284.9,197.8 288.0,197.5 291.1,197.3 292.9,197.2 294.1,197.1 297.2,196.9 300.3,196.8 303.3,196.8 306.4,196.8 309.5,196.9 312.5,197.0 315.6,197.1 318.7,197.3 321.8,197.6 324.8,197.9 327.9,198.2 331.0,198.6 334.0,199.0 337.1,199.4 340.2,199.9 343.2,200.5 346.3,201.0 348.9,201.5 349.4,201.6 352.4,202.3 355.5,202.9 358.6,203.6 361.6,204.4 364.7,205.1 367.8,205.9 370.8,206.7 373.9,207.5 377.0,208.4 380.1,209.3 383.1,210.2 386.2,211.1 389.3,212.1 392.3,213.0 395.4,214.0 398.3,214.9 398.5,215.0 401.5,216.0 404.6,217.0 407.7,218.1 410.7,219.1 413.8,220.2 416.9,221.3 419.9,222.3 423.0,223.4 426.1,224.5 429.2,225.6 432.2,226.7 435.3,227.8 438.4,228.9 441.4,230.0 444.5,231.2 447.6,232.3 450.6,233.4 453.7,234.5 456.8,235.6 459.8,236.7 462.9,237.9 466.0,239.0 469.0,240.1 472.1,241.2 475.2,242.3 478.2,243.4 481.3,244.4 484.4,245.5 487.5,246.6 490.5,247.7 493.6,248.7 496.7,249.8 499.7,250.8 502.8,251.9 505.9,252.9 508.9,253.9 512.0,254.9 515.1,255.9 518.1,256.9 521.2,257.9 524.3,258.9 527.3,259.8 530.4,260.8 533.5,261.7 536.5,262.7 539.6,263.6 542.7,264.5 545.8,265.4 548.8,266.3 551.9,267.2 555.0,268.0 558.0,268.9 561.1,269.7 564.2,270.5 567.2,271.4 570.3,272.2 573.4,273.0 576.4,273.7 579.5,274.5 582.6,275.3 585.6,276.0 588.7,276.8 591.8,277.5 594.8,278.2 597.9,278.9 601.0,279.6 604.1,280.3 607.1,280.9 610.2,281.6 613.3,282.2 616.3,282.9 619.4,283.5 622.5,284.1 625.5,284.7 628.6,285.3 631.7,285.9 634.7,286.4 637.8,287.0 640.9,287.6 643.9,288.1 647.0,288.6 650.1,289.1 653.2,289.6 656.2,290.1 659.3,290.6 662.4,291.1 665.4,291.6 668.5,292.1 671.6,292.5 674.6,292.9 677.7,293.4 680.8,293.8 683.8,294.2 686.9,294.6 690.0,295.0 693.0,295.4 696.1,295.8 699.2,296.2 702.2,296.6 705.3,296.9 708.4,297.3 711.5,297.6 714.5,298.0 717.6,298.3 720.7,298.6 723.7,298.9 726.8,299.2 729.9,299.6 732.9,299.8 736.0,300.1 L 736.0,312.0 Z" fill="#4338CA" fill-opacity="0.12" stroke="none" />
+
+  <path d="M 64.0,243.5 L 64.0,305.8 67.1,305.8 70.1,305.8 73.2,305.8 76.3,305.8 79.3,305.8 82.4,305.8 85.5,305.8 88.5,305.8 91.6,305.8 94.7,305.8 97.8,305.8 100.8,305.8 103.9,305.8 107.0,305.8 110.0,305.8 113.1,305.8 116.2,305.8 119.2,305.8 122.3,305.8 125.4,305.8 128.4,305.8 131.5,305.8 134.6,305.8 137.6,305.8 140.7,305.8 143.8,305.8 146.8,305.8 149.9,305.8 153.0,305.8 156.1,305.8 159.1,305.8 162.2,305.8 165.3,305.8 168.3,305.8 171.4,305.8 174.5,305.8 177.5,305.8 180.6,305.8 183.7,305.8 186.7,305.8 189.8,305.8 192.9,305.8 195.9,305.8 199.0,305.8 202.1,305.8 205.2,305.8 208.2,305.8 211.3,305.8 214.4,305.8 217.4,305.8 220.5,305.8 223.6,305.8 226.6,305.8 229.7,305.8 232.8,305.8 235.8,305.8 238.9,305.8 242.0,305.8 245.0,305.8 248.1,305.8 251.2,305.8 254.2,305.8 257.3,305.8 260.4,305.8 263.5,305.8 266.5,305.8 269.6,305.8 272.7,305.8 275.7,305.8 278.8,305.8 281.9,305.8 284.9,305.8 288.0,305.8 291.1,305.8 292.9,305.8 294.1,305.0 297.2,303.2 300.3,301.4 303.3,299.6 306.4,297.8 309.5,296.0 312.5,294.2 315.6,292.3 318.7,290.5 321.8,288.7 324.8,286.9 327.9,285.1 331.0,283.3 334.0,281.5 337.1,279.6 340.2,277.8 343.2,276.0 346.3,274.2 348.9,272.7 349.4,272.4 352.4,270.6 355.5,268.8 358.6,267.0 361.6,265.1 364.7,263.3 367.8,261.5 370.8,259.7 373.9,257.9 377.0,256.1 380.1,254.3 383.1,252.5 386.2,250.6 389.3,248.8 392.3,247.0 395.4,245.2 398.3,243.5 L 398.3,243.5 Z" fill="#E5484D" fill-opacity="0.10" stroke="none" />
+  <path d="M 398.3,243.5 L 398.3,243.5 398.5,243.4 401.5,241.6 404.6,239.8 407.7,237.9 410.7,236.1 413.8,234.3 416.9,232.5 419.9,230.7 423.0,228.9 426.1,227.1 429.2,225.3 432.2,223.4 435.3,221.6 438.4,219.8 441.4,218.0 444.5,216.2 447.6,214.4 450.6,212.6 453.7,210.8 456.8,208.9 459.8,207.1 462.9,205.3 466.0,203.5 469.0,201.7 472.1,199.9 475.2,198.1 478.2,196.2 481.3,194.4 484.4,192.6 487.5,190.8 490.5,189.0 493.6,187.2 496.7,185.4 499.7,183.6 502.8,181.7 505.9,179.9 508.9,178.1 512.0,176.3 515.1,174.5 518.1,172.7 521.2,170.9 524.3,169.1 527.3,167.2 530.4,165.4 533.5,163.6 536.5,161.8 539.6,160.0 542.7,158.2 545.8,156.4 548.8,154.5 551.9,152.7 555.0,150.9 558.0,149.1 561.1,147.3 564.2,145.5 567.2,143.7 570.3,141.9 573.4,140.0 576.4,138.2 579.5,136.4 582.6,134.6 585.6,132.8 588.7,131.0 591.8,129.2 594.8,127.4 597.9,125.5 601.0,123.7 604.1,121.9 607.1,120.1 610.2,118.3 613.3,116.5 616.3,114.7 619.4,112.8 622.5,111.0 625.5,109.2 628.6,107.4 631.7,105.6 634.7,103.8 637.8,102.0 640.9,100.2 643.9,98.3 647.0,96.5 650.1,94.7 653.2,92.9 656.2,91.1 659.3,89.3 662.4,87.5 665.4,85.7 668.5,83.8 671.6,82.0 674.6,80.2 677.7,78.4 680.8,76.6 683.8,74.8 686.9,73.0 690.0,71.1 693.0,69.3 696.1,67.5 699.2,65.7 702.2,63.9 705.3,62.1 708.4,60.3 711.5,58.5 714.5,56.6 717.6,54.8 720.7,53.0 723.7,51.2 726.8,49.4 729.9,47.6 732.9,45.8 736.0,44.0 L 736.0,243.5 Z" fill="#0E9F6E" fill-opacity="0.10" stroke="none" />
+
+  <line x1="64" y1="243.5" x2="736" y2="243.5"
+        stroke="#0B1120" stroke-width="1" stroke-opacity="0.35" />
+
+  <line x1="398.3" y1="24" x2="398.3" y2="312.0"
+        stroke="#64748B" stroke-width="1.5" stroke-dasharray="4 4" />
+  <text x="398.3" y="16" text-anchor="middle"
+        font-family="Inter Tight, sans-serif" font-size="11" fill="#64748B">
+    breakeven $362.17</text>
+
+  <line x1="348.9" y1="24" x2="348.9" y2="312.0"
+        stroke="#4338CA" stroke-width="1.5" stroke-dasharray="2 3" />
+  <text x="348.9" y="332" text-anchor="middle"
+        font-family="Inter Tight, sans-serif" font-size="11" font-weight="600" fill="#4338CA">
+    spot $333.02</text>
+
+  <path d="M 64.0,305.8 67.1,305.8 70.1,305.8 73.2,305.8 76.3,305.8 79.3,305.8 82.4,305.8 85.5,305.8 88.5,305.8 91.6,305.8 94.7,305.8 97.8,305.8 100.8,305.8 103.9,305.8 107.0,305.8 110.0,305.8 113.1,305.8 116.2,305.8 119.2,305.8 122.3,305.8 125.4,305.8 128.4,305.8 131.5,305.8 134.6,305.8 137.6,305.8 140.7,305.8 143.8,305.8 146.8,305.8 149.9,305.8 153.0,305.8 156.1,305.8 159.1,305.8 162.2,305.8 165.3,305.8 168.3,305.8 171.4,305.8 174.5,305.8 177.5,305.8 180.6,305.8 183.7,305.8 186.7,305.8 189.8,305.8 192.9,305.8 195.9,305.8 199.0,305.8 202.1,305.8 205.2,305.8 208.2,305.8 211.3,305.8 214.4,305.8 217.4,305.8 220.5,305.8 223.6,305.8 226.6,305.8 229.7,305.8 232.8,305.8 235.8,305.8 238.9,305.8 242.0,305.8 245.0,305.8 248.1,305.8 251.2,305.8 254.2,305.8 257.3,305.8 260.4,305.8 263.5,305.8 266.5,305.8 269.6,305.8 272.7,305.8 275.7,305.8 278.8,305.8 281.9,305.8 284.9,305.8 288.0,305.8 291.1,305.8 292.9,305.8 294.1,305.0 297.2,303.2 300.3,301.4 303.3,299.6 306.4,297.8 309.5,296.0 312.5,294.2 315.6,292.3 318.7,290.5 321.8,288.7 324.8,286.9 327.9,285.1 331.0,283.3 334.0,281.5 337.1,279.6 340.2,277.8 343.2,276.0 346.3,274.2 348.9,272.7 349.4,272.4 352.4,270.6 355.5,268.8 358.6,267.0 361.6,265.1 364.7,263.3 367.8,261.5 370.8,259.7 373.9,257.9 377.0,256.1 380.1,254.3 383.1,252.5 386.2,250.6 389.3,248.8 392.3,247.0 395.4,245.2 398.3,243.5 398.5,243.4 401.5,241.6 404.6,239.8 407.7,237.9 410.7,236.1 413.8,234.3 416.9,232.5 419.9,230.7 423.0,228.9 426.1,227.1 429.2,225.3 432.2,223.4 435.3,221.6 438.4,219.8 441.4,218.0 444.5,216.2 447.6,214.4 450.6,212.6 453.7,210.8 456.8,208.9 459.8,207.1 462.9,205.3 466.0,203.5 469.0,201.7 472.1,199.9 475.2,198.1 478.2,196.2 481.3,194.4 484.4,192.6 487.5,190.8 490.5,189.0 493.6,187.2 496.7,185.4 499.7,183.6 502.8,181.7 505.9,179.9 508.9,178.1 512.0,176.3 515.1,174.5 518.1,172.7 521.2,170.9 524.3,169.1 527.3,167.2 530.4,165.4 533.5,163.6 536.5,161.8 539.6,160.0 542.7,158.2 545.8,156.4 548.8,154.5 551.9,152.7 555.0,150.9 558.0,149.1 561.1,147.3 564.2,145.5 567.2,143.7 570.3,141.9 573.4,140.0 576.4,138.2 579.5,136.4 582.6,134.6 585.6,132.8 588.7,131.0 591.8,129.2 594.8,127.4 597.9,125.5 601.0,123.7 604.1,121.9 607.1,120.1 610.2,118.3 613.3,116.5 616.3,114.7 619.4,112.8 622.5,111.0 625.5,109.2 628.6,107.4 631.7,105.6 634.7,103.8 637.8,102.0 640.9,100.2 643.9,98.3 647.0,96.5 650.1,94.7 653.2,92.9 656.2,91.1 659.3,89.3 662.4,87.5 665.4,85.7 668.5,83.8 671.6,82.0 674.6,80.2 677.7,78.4 680.8,76.6 683.8,74.8 686.9,73.0 690.0,71.1 693.0,69.3 696.1,67.5 699.2,65.7 702.2,63.9 705.3,62.1 708.4,60.3 711.5,58.5 714.5,56.6 717.6,54.8 720.7,53.0 723.7,51.2 726.8,49.4 729.9,47.6 732.9,45.8 736.0,44.0" fill="none" stroke="#0B1120" stroke-width="2.5" stroke-linejoin="round" />
+</svg>
+  </section>
+
+  <section class="panel">
+    <h2>The contract</h2>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">Strike</span>
+        <span class="value">$300.00</span>
+      </div>
+      <div class="stat">
+        <span class="label">Expiration</span>
+        <span class="value" style="font-size: 15px;">2027-06-17</span>
+      </div>
+      <div class="stat">
+        <span class="label">Days to expiration</span>
+        <span class="value">326</span>
+      </div>
+      <div class="stat">
+        <span class="label">Premium</span>
+        <span class="value">$62.17</span>
+      </div>
+      <div class="stat">
+        <span class="label">Breakeven</span>
+        <span class="value">$362.17</span>
+      </div>
+      <div class="stat">
+        <span class="label">Max profit</span>
+        <span class="value pl-positive">
+          Unlimited
+        </span>
+      </div>
+      <div class="stat">
+        <span class="label">Max loss</span>
+        <span class="value pl-negative">-$6,217.00</span>
+      </div>
+      <div class="stat">
+        <span class="label">Capital required</span>
+        <span class="value">$6,217.00</span>
+      </div>
+    </div>
+    
+    <p class="teach">Notice breakeven isn&#39;t the strike — it&#39;s the strike adjusted for the premium paid or received. Probability of profit is measured against breakeven, since that&#39;s the price the position actually needs to clear.</p>
+    
+  </section>
+
+  <section class="panel">
+    <h2>Greeks &amp; implied volatility</h2>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">Delta</span>
+        <span class="value ">0.741</span>
+      </div>
+      <div class="stat">
+        <span class="label">Gamma</span>
+        <span class="value ">0.0034</span>
+      </div>
+      <div class="stat">
+        <span class="label">Theta (per day)</span>
+        <span class="value ">-0.068</span>
+      </div>
+      <div class="stat">
+        <span class="label">Vega (per 1% vol)</span>
+        <span class="value ">1.022</span>
+      </div>
+      <div class="stat">
+        <span class="label">Rho (per 1% rate)</span>
+        <span class="value ">1.658</span>
+      </div>
+      <div class="stat">
+        <span class="label">Implied volatility</span>
+        <span class="value ">30.0%</span>
+      </div>
+    </div>
+    <p class="caption">
+      
+        from Alpaca
+      
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>Probability of profit</h2>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">Closed-form (lognormal)</span>
+        <span class="value">38.1%</span>
+      </div>
+      <div class="stat">
+        <span class="label">Monte Carlo (100,000 paths)</span>
+        <span class="value">38.1%</span>
+      </div>
+      <div class="stat">
+        <span class="label">Probability of touching breakeven before expiration</span>
+        <span class="value">73.7%</span>
+      </div>
+      <div class="stat">
+        <span class="label">Average win (simulated)</span>
+        <span class="value pl-positive">$8,524.33</span>
+      </div>
+      <div class="stat">
+        <span class="label">Average loss (simulated)</span>
+        <span class="value pl-negative">-$4,941.21</span>
+      </div>
+      <div class="stat">
+        <span class="label">Risk-adjusted score (annualized)</span>
+        <span class="value">0.0330</span>
+      </div>
+    </div>
+    
+    
+    <p class="teach">Under the model&#39;s own risk-neutral assumptions, every option&#39;s expected profit is approximately zero minus trading costs — the probabilities above describe likely outcomes, not a positive edge. A profitable trade requires a directional view this model does not have.</p>
+    
+    
+    <p class="caption"><strong>Why this contract:</strong> #1 (AAPL270617C00300000, strike 300) scores 0.033 annualized risk-adjusted return per dollar at risk, vs #2 (AAPL280317C00300000, strike 300) at 0.030 — a 0.003 edge. (Candidates evaluated: 12)</p>
+    
+
+    <div class="methodology">
+      <h3>Methodology — every number, verifiable</h3>
+      <p class="methodology-intro">Every figure above comes from this project&#39;s own math engine, computed locally, right now — no third-party black box. Full source tree: <span class="path">src/optionslab/</span></p>
+      <div class="methodology-table-wrap">
+        <table class="methodology-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Formula</th>
+              <th>Source (file :: function)</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td>Closed-form (lognormal)</td>
+              <td class="formula">N(d2) [breakeven above spot] or N(−d2) [below] — d2 = [ln(S/breakeven) + (r − σ²/2)T] / (σ√T)</td>
+              <td class="source">src/optionslab/bs.py::d1_d2 → src/optionslab/pop.py::probability_of_profit_closed_form</td>
+            </tr>
+            
+            <tr>
+              <td>Monte Carlo (100,000 paths)</td>
+              <td class="formula">mean(1{S_T beats breakeven}) over 100,000 simulated GBM paths (antithetic variates, seed=7)</td>
+              <td class="source">src/optionslab/pop.py::simulate_paths, probability_of_profit_monte_carlo</td>
+            </tr>
+            
+            <tr>
+              <td>Probability of touching breakeven before expiration</td>
+              <td class="formula">mean(1{path touches breakeven at any point before expiry}), same simulated paths</td>
+              <td class="source">src/optionslab/pop.py::probability_of_touch</td>
+            </tr>
+            
+            <tr>
+              <td>Average win (simulated)</td>
+              <td class="formula">mean(payoff) over simulated paths where payoff &gt; 0</td>
+              <td class="source">src/optionslab/select.py::evaluate_contract</td>
+            </tr>
+            
+            <tr>
+              <td>Average loss (simulated)</td>
+              <td class="formula">mean(−payoff) over simulated paths where payoff ≤ 0</td>
+              <td class="source">src/optionslab/select.py::evaluate_contract</td>
+            </tr>
+            
+            <tr>
+              <td>Risk-adjusted score (annualized)</td>
+              <td class="formula">(POP_MC × avg_win − (1 − POP_MC) × avg_loss) ÷ capital_required × (365 ÷ DTE)</td>
+              <td class="source">src/optionslab/select.py::evaluate_contract</td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Technical snapshot</h2>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">SMA 20</span>
+        <span class="value">$314.39</span>
+      </div>
+      <div class="stat">
+        <span class="label">SMA 50</span>
+        <span class="value">$306.23</span>
+      </div>
+      <div class="stat">
+        <span class="label">SMA 200</span>
+        <span class="value">$275.98</span>
+      </div>
+      <div class="stat">
+        <span class="label">RSI (14)</span>
+        <span class="value">65.2</span>
+      </div>
+      <div class="stat">
+        <span class="label">Historical volatility (30d)</span>
+        <span class="value">33.6%</span>
+        <span class="caption">94 percentile of the past year</span>
+      </div>
+      <div class="stat">
+        <span class="label">Historical volatility (90d)</span>
+        <span class="value">26.9%</span>
+        <span class="caption">99 percentile of the past year</span>
+      </div>
+      <div class="stat">
+        <span class="label">52-week range</span>
+        <span class="value" style="font-size: 15px;">$202.38 – $333.74</span>
+      </div>
+      <div class="stat">
+        <span class="label">Directional bias</span>
+        <span class="value" style="font-size: 15px;">Bullish (price above rising averages)</span>
+      </div>
+    </div>
+  </section>
+
+  <p class="footer-note">Educational tool only. Data from Alpaca&#39;s paper trading API and yfinance. Not investment advice — this is a practice environment for learning options mechanics, not a signal to trade real money.</p>
+
+</div>
+</body>
+</html>
