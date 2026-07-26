@@ -51,3 +51,10 @@ Layered, one direction only: **config/creds → market data → math → strateg
 - Liquidity failures are **flagged, never filtered out** — the caller still receives the contract with `liquidity_ok: False`.
 - `archive/`, `cache/`, and `watchlist.json` are per-machine state and gitignored.
 - The SVG palette in `svg.py` must stay in sync with `static/css/report.css`.
+
+## Accounts on this machine
+
+Two people share this PC — Thiago and Denny, close friends — so the identities differ by service and neither is a mistake:
+
+- **Google (NotebookLM, Drive, Calendar, the Google ecosystem)** — `dennyscott.jupiter@gmail.com` (Denny). Expected and approved; the "Stock Options" NotebookLM notebook lives here and is the source of truth for the app's educational copy.
+- **GitHub (`gh` CLI, this repo's remote)** — the `dennyscottjupiter-spec` account holds the token, but **git commits are authored by `thiago ab`**. Don't "fix" the commit author to match the gh login.
