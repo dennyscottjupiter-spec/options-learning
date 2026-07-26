@@ -159,6 +159,25 @@ CATALOG = {
         "breakeven_vs_strike_note": "Notice breakeven isn't the strike — it's the strike "
         "adjusted for the premium paid or received. Probability of profit is measured "
         "against breakeven, since that's the price the position actually needs to clear.",
+        "whats_next_section": "What happens next",
+        "take_profit_title": "Take-profit level",
+        "take_profit_intro": "Taking profit at roughly 50% of max profit is a common "
+        "risk-management practice — it locks in gains rather than risking a winner.",
+        "take_profit_target_label": "Target",
+        "take_profit_price_label": "Roughly at a stock price of",
+        "take_profit_none_body": "This strategy has unlimited upside, so there's no fixed "
+        "profit target. The same logic still applies: consider taking some profit as gains "
+        "grow, rather than assuming you must hold to expiration.",
+        "theta_decay_title": "Time decay",
+        "theta_decay_caption": "Extrinsic value remaining if the stock price and "
+        "volatility stayed exactly where they are today, decaying purely from time "
+        "passing. Decay accelerates as expiration approaches — the reason holding to "
+        "expiry is usually suboptimal.",
+        "rolling_title": "Rolling",
+        "rolling_body": "Rolling means simultaneously closing this contract and opening a "
+        "new one at a later expiration — commonly used to extend a losing trade's duration "
+        "or to collect additional premium on a winner, rather than just holding to "
+        "expiration.",
         "app_title": "Options Lab",
         "app_tagline": "Learn options mechanics on real contracts, before risking real money.",
         "home_analyze_title": "Analyze a ticker",
@@ -302,6 +321,26 @@ CATALOG = {
         "strike ajustado pelo prêmio pago ou recebido. A probabilidade de lucro é medida "
         "em relação ao ponto de equilíbrio, pois esse é o preço que a posição realmente "
         "precisa superar.",
+        "whats_next_section": "O que acontece a seguir",
+        "take_profit_title": "Nível de realização de lucro",
+        "take_profit_intro": "Realizar lucro em torno de 50% do lucro máximo é uma prática "
+        "comum de gestão de risco — trava o ganho em vez de arriscar uma posição vencedora.",
+        "take_profit_target_label": "Alvo",
+        "take_profit_price_label": "Aproximadamente a um preço de",
+        "take_profit_none_body": "Esta estratégia tem potencial de lucro ilimitado, então "
+        "não há um alvo fixo de lucro. A mesma lógica se aplica: considere realizar parte "
+        "do lucro conforme ele cresce, em vez de supor que precisa manter até o "
+        "vencimento.",
+        "theta_decay_title": "Perda de valor no tempo",
+        "theta_decay_caption": "Valor extrínseco restante se o preço da ação e a "
+        "volatilidade permanecessem exatamente onde estão hoje, decaindo puramente pela "
+        "passagem do tempo. A perda de valor acelera perto do vencimento — a razão pela "
+        "qual manter até o vencimento costuma ser subótimo.",
+        "rolling_title": "Rolagem",
+        "rolling_body": "Rolar significa encerrar este contrato e abrir um novo em um "
+        "vencimento posterior ao mesmo tempo — usado comumente para estender a duração de "
+        "uma operação perdedora ou para coletar prêmio adicional em uma vencedora, em vez "
+        "de simplesmente manter até o vencimento.",
         "app_title": "Options Lab",
         "app_tagline": "Aprenda a mecânica de opções em contratos reais, antes de arriscar "
         "dinheiro de verdade.",
