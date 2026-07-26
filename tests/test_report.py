@@ -313,6 +313,64 @@ def test_moneyness_split_wired_into_report_context(patched_config, stub_market, 
     assert 'class="premium-split-bar"' in html
 
 
+# --- max profit/loss net of commissions + assignment tax note ---------------
+
+
+def test_net_max_profit_and_loss_reflect_commission_config(
+    patched_config, stub_market, stub_report_data, monkeypatch: pytest.MonkeyPatch
+):
+    patched_config["costs"]["commission_per_contract"] = 5.0
+    monkeypatch.setattr(report, "load_config", lambda: patched_config)
+
+    ctx = report.build_report_context("TST", "long_call", static_export=True)
+    assert ctx["round_trip_commission"] == pytest.approx(10.0)
+    assert ctx["net_max_profit"] is None  # long_call has unbounded upside
+    assert ctx["net_max_loss"] == pytest.approx(ctx["strategy"].max_loss - 10.0)
+
+
+def test_net_max_loss_changes_when_commission_config_changes(
+    patched_config, stub_market, stub_report_data, monkeypatch: pytest.MonkeyPatch
+):
+    patched_config["costs"]["commission_per_contract"] = 0.10
+    monkeypatch.setattr(report, "load_config", lambda: patched_config)
+    ctx_cheap = report.build_report_context("TST", "long_call", static_export=True)
+
+    patched_config["costs"]["commission_per_contract"] = 5.0
+    ctx_expensive = report.build_report_context("TST", "long_call", static_export=True)
+
+    assert ctx_cheap["net_max_loss"] != ctx_expensive["net_max_loss"]
+
+
+def test_assignment_tax_note_only_for_covered_call(patched_config, monkeypatch: pytest.MonkeyPatch, daily_bars):
+    expiration = (date.today() + timedelta(days=35)).isoformat()
+    monkeypatch.setattr(market, "get_latest_price", lambda ticker: 105.0)
+    monkeypatch.setattr(market, "get_option_chain", lambda ticker, **kwargs: _covered_call_chain(expiration, 105.0))
+    monkeypatch.setattr(
+        market,
+        "get_account",
+        lambda: {"status": "ACTIVE", "cash": 50_000.0, "buying_power": 50_000.0, "portfolio_value": 50_000.0},
+    )
+    monkeypatch.setattr(market, "get_daily_bars", lambda ticker, **kwargs: daily_bars)
+    monkeypatch.setattr(
+        fundamentals,
+        "get_fundamentals",
+        lambda symbol: {
+            "company_name": symbol,
+            "market_cap": None,
+            "sector": None,
+            "next_earnings_date": None,
+            "next_ex_dividend_date": None,
+        },
+    )
+    html = report.render_report_html("TST", "covered_call", mode="pro", lang="en", static_export=True, asset_prefix=".")
+    assert CATALOG["en"]["assignment_tax_note"] in html
+
+
+def test_assignment_tax_note_absent_for_long_call(patched_config, stub_market, stub_report_data):
+    html = report.render_report_html("TST", "long_call", mode="pro", lang="en", static_export=True, asset_prefix=".")
+    assert CATALOG["en"]["assignment_tax_note"] not in html
+
+
 # --- payoff diagram + technical bias -----------------------------------------
 
 

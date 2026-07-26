@@ -174,16 +174,23 @@
         <span class="value pl-positive">
           {% if strategy.max_profit is none %}{{ s.unlimited }}{% else %}{{ strategy.max_profit | money }}{% endif %}
         </span>
+        {% if strategy.max_profit is not none %}
+        <span class="caption">{{ s.net_of_commissions }}: {{ net_max_profit | money }}</span>
+        {% endif %}
       </div>
       <div class="stat">
         <span class="label">{{ s.max_loss }}</span>
         <span class="value pl-negative">{{ strategy.max_loss | money }}</span>
+        <span class="caption">{{ s.net_of_commissions }}: {{ net_max_loss | money }}</span>
       </div>
       <div class="stat">
         <span class="label">{{ s.capital_required }}</span>
         <span class="value">{{ strategy.capital_required | money }}</span>
       </div>
     </div>
+    {% if strategy_type == 'covered_call' %}
+    <p class="caption">{{ s.assignment_tax_note }}</p>
+    {% endif %}
     {% if mode == 'learn' %}
     <p class="teach">{{ s.breakeven_vs_strike_note }}</p>
     {% endif %}

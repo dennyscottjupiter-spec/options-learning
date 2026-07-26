@@ -88,6 +88,9 @@ CATALOG = {
         "breakeven": "Breakeven",
         "max_profit": "Max profit",
         "max_loss": "Max loss",
+        "net_of_commissions": "Net of commissions",
+        "assignment_tax_note": "Assignment on this covered call sells your 100 shares at the "
+        "strike — a stock sale, which is a taxable event.",
         "capital_required": "Capital required",
         "unlimited": "Unlimited",
         "greeks_section": "Greeks & implied volatility",
@@ -221,6 +224,9 @@ CATALOG = {
         "breakeven": "Ponto de equilíbrio",
         "max_profit": "Lucro máximo",
         "max_loss": "Perda máxima",
+        "net_of_commissions": "Líquido de comissões",
+        "assignment_tax_note": "O exercício desta covered call vende suas 100 ações ao "
+        "strike — uma venda de ações, o que é um evento tributável.",
         "capital_required": "Capital necessário",
         "unlimited": "Ilimitado",
         "greeks_section": "Gregas e volatilidade implícita",

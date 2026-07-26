@@ -31,5 +31,8 @@ default_language = "en"           # "en" | "pt-BR"
 archive_dir = "archive"
 atm_band_pct = 0.02               # within +/-2% of spot counts as at-the-money for the moneyness badge
 
+[costs]
+commission_per_contract = 0.65    # round-trip cost is applied as 2x this
+
 [watchlist]
 tickers = ["AAPL", "MSFT", "NVDA", "V"]
