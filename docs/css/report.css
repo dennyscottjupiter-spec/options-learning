@@ -371,6 +371,56 @@ html, body {
   color: var(--muted);
 }
 
+.stat-wide { grid-column: 1 / -1; }
+
+.moneyness-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  vertical-align: 2px;
+}
+
+.moneyness-itm { background: var(--indigo-soft); color: var(--indigo); }
+.moneyness-atm, .moneyness-otm { color: var(--muted); border: 1px solid var(--hairline); }
+
+.premium-split-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 8px;
+  background: var(--hairline);
+}
+
+.premium-split-intrinsic { background: var(--indigo); }
+.premium-split-extrinsic { background: var(--muted); }
+
+.premium-split-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 6px;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-right: 4px;
+  vertical-align: 1px;
+}
+
+.swatch-intrinsic { background: var(--indigo); }
+.swatch-extrinsic { background: var(--muted); }
+
 /* ---------- Payoff diagram ---------- */
 
 .payoff-svg {

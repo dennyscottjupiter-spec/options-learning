@@ -29,6 +29,7 @@ max_bid_ask_spread_pct = 0.10     # of mid price
 default_mode = "learn"            # "learn" | "pro"
 default_language = "en"           # "en" | "pt-BR"
 archive_dir = "archive"
+atm_band_pct = 0.02               # within +/-2% of spot counts as at-the-money for the moneyness badge
 
 [watchlist]
 tickers = ["AAPL", "MSFT", "NVDA", "V"]
