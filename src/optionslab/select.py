@@ -29,6 +29,13 @@ from optionslab.strategies import (
 
 StrategyType = Literal["long_call", "cash_secured_put", "covered_call", "protective_put"]
 
+STRATEGY_TYPES: list[StrategyType] = [
+    "long_call",
+    "cash_secured_put",
+    "covered_call",
+    "protective_put",
+]
+
 _OPTION_TYPE: dict[StrategyType, str] = {
     "long_call": "call",
     "cash_secured_put": "put",

@@ -15,8 +15,10 @@ from optionslab.config import load_config
 from optionslab.i18n import get_strategy_blurb, get_strategy_name, get_strings
 from optionslab.svg import render_payoff_svg
 
-TEMPLATES_DIR = Path(__file__).resolve().parents[2] / "templates"
-ARCHIVE_DIR = Path(__file__).resolve().parents[2] / "archive"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+TEMPLATES_DIR = PROJECT_ROOT / "templates"
+ARCHIVE_DIR = PROJECT_ROOT / "archive"
+_SRC_DIR = PROJECT_ROOT / "src" / "optionslab"
 
 _BIAS_KEY = {
     "bullish": "bias_bullish",
@@ -54,6 +56,53 @@ def _format_market_cap(value: float | None) -> str:
     return f"${value:,.0f}"
 
 
+def _methodology_rows(mc_paths: int, mc_seed: int, src_dir: str) -> list[dict]:
+    """Every 'Probability of profit' figure traces to one of these — exact
+    formula as coded, plus the path to the function that computes it, so the
+    number is checkable, not asserted. `src_dir` is the absolute local path
+    for the live app, or a relative repo path for the public static export —
+    never leak the local machine's directory structure into a published page."""
+    pop_py = f"{src_dir}/pop.py"
+    bs_py = f"{src_dir}/bs.py"
+    select_py = f"{src_dir}/select.py"
+    return [
+        {
+            "metric_key": "pop_closed_form",
+            "formula": "N(d2) [breakeven above spot] or N(−d2) [below] — "
+            "d2 = [ln(S/breakeven) + (r − σ²/2)T] / (σ√T)",
+            "source": f"{bs_py}::d1_d2 → {pop_py}::probability_of_profit_closed_form",
+        },
+        {
+            "metric_key": "pop_monte_carlo",
+            "formula": f"mean(1{{S_T beats breakeven}}) over {mc_paths:,} simulated GBM "
+            f"paths (antithetic variates, seed={mc_seed})",
+            "source": f"{pop_py}::simulate_paths, probability_of_profit_monte_carlo",
+        },
+        {
+            "metric_key": "probability_of_touch",
+            "formula": "mean(1{path touches breakeven at any point before expiry}), "
+            "same simulated paths",
+            "source": f"{pop_py}::probability_of_touch",
+        },
+        {
+            "metric_key": "avg_win",
+            "formula": "mean(payoff) over simulated paths where payoff > 0",
+            "source": f"{select_py}::evaluate_contract",
+        },
+        {
+            "metric_key": "avg_loss",
+            "formula": "mean(−payoff) over simulated paths where payoff ≤ 0",
+            "source": f"{select_py}::evaluate_contract",
+        },
+        {
+            "metric_key": "score",
+            "formula": "(POP_MC × avg_win − (1 − POP_MC) × avg_loss) "
+            "÷ capital_required × (365 ÷ DTE)",
+            "source": f"{select_py}::evaluate_contract",
+        },
+    ]
+
+
 def build_report_context(
     ticker: str,
     strategy_type: select.StrategyType,
@@ -61,6 +110,9 @@ def build_report_context(
     mode: str = "learn",
     lang: str = "en",
     nav: dict | None = None,
+    in_watchlist: bool = False,
+    static_export: bool = False,
+    asset_prefix: str = "/static",
 ) -> dict:
     ticker = ticker.upper()
     cfg = load_config()
@@ -94,11 +146,21 @@ def build_report_context(
     if result["why_best_data"]:
         why_best = s["why_best_template"].format(**result["why_best_data"])
 
+    strategy_options = [(t, get_strategy_name(t, lang)) for t in select.STRATEGY_TYPES]
+    src_dir_display = "src/optionslab" if static_export else str(_SRC_DIR).replace("\\", "/")
+    methodology = _methodology_rows(cfg["math"]["monte_carlo_paths"], cfg["math"]["monte_carlo_seed"], src_dir_display)
+
     return {
         "lang": lang,
         "mode": mode,
         "s": strings_dict,
         "nav": nav or {"mode_learn_href": "#", "mode_pro_href": "#", "lang_toggle_href": "#"},
+        "in_watchlist": in_watchlist,
+        "strategy_options": strategy_options,
+        "methodology": methodology,
+        "src_dir": src_dir_display,
+        "static_export": static_export,
+        "asset_prefix": asset_prefix,
         "ticker": ticker,
         "company_name": fund.get("company_name", ticker),
         "sector": fund.get("sector"),
@@ -129,9 +191,27 @@ def render_report_html(
     mode: str = "learn",
     lang: str = "en",
     nav: dict | None = None,
+    in_watchlist: bool = False,
+    static_export: bool = False,
+    asset_prefix: str = "/static",
 ) -> str:
-    context = build_report_context(ticker, strategy_type, expiration_date, mode, lang, nav)
+    context = build_report_context(
+        ticker, strategy_type, expiration_date, mode, lang, nav, in_watchlist, static_export, asset_prefix
+    )
     template = _env().get_template("report.html.jinja")
+    return template.render(**context)
+
+
+def render_home_html(lang: str, cards: list[dict], lang_toggle_href: str) -> str:
+    s = get_strings(lang)
+    context = {
+        "lang": lang,
+        "s": s,
+        "cards": cards,
+        "lang_toggle_href": lang_toggle_href,
+        "strategy_options": [(t, get_strategy_name(t, lang)) for t in select.STRATEGY_TYPES],
+    }
+    template = _env().get_template("home.html.jinja")
     return template.render(**context)
 
 

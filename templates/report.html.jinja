@@ -4,7 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ s.report_title }} — {{ ticker }}</title>
-<link rel="stylesheet" href="/static/css/report.css">
+<script>
+(function () {
+  var t = localStorage.getItem("optionslab-theme");
+  if (!t) { t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; }
+  document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+<link rel="stylesheet" href="{{ asset_prefix | default('/static') }}/css/report.css">
+<script src="{{ asset_prefix | default('/static') }}/js/theme.js"></script>
 </head>
 <body>
 <div class="page">
@@ -19,9 +27,13 @@
         <a href="{{ nav.mode_learn_href }}" class="{{ 'active' if mode == 'learn' else '' }}">{{ s.mode_learn }}</a>
         <a href="{{ nav.mode_pro_href }}" class="{{ 'active' if mode == 'pro' else '' }}">{{ s.mode_pro }}</a>
       </nav>
-      <a class="flag-toggle" href="{{ nav.lang_toggle_href }}">🇧🇷 {{ s.lang_toggle }}</a>
+      <a class="flag-toggle" href="{{ nav.lang_toggle_href }}">{% include "_flag_br.html.jinja" %} {{ s.lang_toggle }}</a>
+      {% include "_help_toggle.html.jinja" %}
+      {% include "_theme_toggle.html.jinja" %}
     </div>
   </header>
+
+  {% include "_help_modal.html.jinja" %}
 
   <section class="panel">
     <div class="stat-row">
@@ -43,6 +55,54 @@
       </div>
     </div>
   </section>
+
+  {% if static_export %}
+  <div class="warning static-demo">
+    <h3>◆ {{ s.static_demo_title }}</h3>
+    <p>{{ s.static_demo_body }} <a href="index.html">{{ s.back_to_dashboard }}</a></p>
+  </div>
+  {% else %}
+  <div class="control-bar">
+    <a class="btn-secondary" href="/?lang={{ lang }}">{{ s.back_to_dashboard }}</a>
+    <div class="control-actions">
+      {% if in_watchlist %}
+      <form method="post" action="/watchlist/remove">
+        <input type="hidden" name="ticker" value="{{ ticker }}">
+        <input type="hidden" name="lang" value="{{ lang }}">
+        <button type="submit" class="btn-secondary">{{ s.remove_button }}</button>
+      </form>
+      {% else %}
+      <form method="post" action="/watchlist/add">
+        <input type="hidden" name="ticker" value="{{ ticker }}">
+        <input type="hidden" name="lang" value="{{ lang }}">
+        <button type="submit" class="btn-secondary">{{ s.add_to_watchlist_button }}</button>
+      </form>
+      {% endif %}
+      <a class="btn-primary" href="/report/{{ ticker }}/pdf?strategy={{ strategy_type }}&amp;mode={{ mode }}&amp;lang={{ lang }}&amp;expiration={{ strategy.expiration }}">{{ s.download_pdf }}</a>
+    </div>
+  </div>
+
+  <section class="panel adjust-selection">
+    <h2>{{ s.adjust_selection_title }}</h2>
+    <form method="get" action="/report/{{ ticker }}" class="form-row">
+      <div class="field">
+        <label for="strategy">{{ s.strategy_label }}</label>
+        <select id="strategy" name="strategy">
+          {% for value, label in strategy_options %}
+          <option value="{{ value }}" {{ 'selected' if value == strategy_type else '' }}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="expiration">{{ s.expiration_override_label }}</label>
+        <input id="expiration" name="expiration" type="date" value="{{ strategy.expiration }}">
+      </div>
+      <input type="hidden" name="mode" value="{{ mode }}">
+      <input type="hidden" name="lang" value="{{ lang }}">
+      <button type="submit" class="btn-primary">{{ s.update_button }}</button>
+    </form>
+  </section>
+  {% endif %}
 
   {% if earnings_warning %}
   <div class="warning earnings">
@@ -188,6 +248,31 @@
     {% if why_best %}
     <p class="caption"><strong>{{ s.why_best }}:</strong> {{ why_best }} ({{ s.candidates_evaluated }}: {{ candidates_evaluated }})</p>
     {% endif %}
+
+    <div class="methodology">
+      <h3>{{ s.methodology_title }}</h3>
+      <p class="methodology-intro">{{ s.methodology_intro }} <span class="path">{{ src_dir }}/</span></p>
+      <div class="methodology-table-wrap">
+        <table class="methodology-table">
+          <thead>
+            <tr>
+              <th>{{ s.methodology_col_metric }}</th>
+              <th>{{ s.methodology_col_formula }}</th>
+              <th>{{ s.methodology_col_source }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in methodology %}
+            <tr>
+              <td>{{ s[row.metric_key] }}</td>
+              <td class="formula">{{ row.formula }}</td>
+              <td class="source">{{ row.source }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </section>
 
   <section class="panel">

@@ -140,6 +140,41 @@ CATALOG = {
         "breakeven_vs_strike_note": "Notice breakeven isn't the strike — it's the strike "
         "adjusted for the premium paid or received. Probability of profit is measured "
         "against breakeven, since that's the price the position actually needs to clear.",
+        "app_title": "Options Lab",
+        "app_tagline": "Learn options mechanics on real contracts, before risking real money.",
+        "home_analyze_title": "Analyze a ticker",
+        "adjust_selection_title": "Adjust selection",
+        "ticker_label": "Ticker",
+        "ticker_placeholder": "e.g. AAPL",
+        "strategy_label": "Strategy",
+        "expiration_override_label": "Expiration override",
+        "analyze_button": "Analyze",
+        "update_button": "Update",
+        "watchlist_title": "Watchlist",
+        "watchlist_empty": "No tickers yet — add one above.",
+        "watchlist_add_placeholder": "Add ticker",
+        "add_to_watchlist_button": "Add to watchlist",
+        "remove_button": "Remove",
+        "data_unavailable": "Data unavailable",
+        "back_to_dashboard": "← Dashboard",
+        "download_pdf": "Download PDF",
+        "view_report": "View report",
+        "methodology_title": "Methodology — every number, verifiable",
+        "methodology_intro": "Every figure above comes from this project's own math "
+        "engine, computed locally, right now — no third-party black box. Full source "
+        "tree:",
+        "methodology_col_metric": "Metric",
+        "methodology_col_formula": "Formula",
+        "methodology_col_source": "Source (file :: function)",
+        "static_demo_title": "Static demo — frozen sample data",
+        "static_demo_body": "This page is a snapshot for portfolio purposes, not the live app. "
+        "The real tool runs locally, pulling live prices and option chains from Alpaca's paper "
+        "trading API, with a full watchlist dashboard and PDF export.",
+        "static_index_intro": "Below is a real, frozen snapshot of the report page — payoff "
+        "diagram, Greeks, probability of profit, and the full transparency methodology. Try dark "
+        "mode above, then open the sample (it links out to a Portuguese version and a Pro-mode "
+        "view too).",
+        "static_index_cta": "Open the sample report",
     },
     "pt-BR": {
         "report_title": "Análise de Opções",
@@ -227,6 +262,43 @@ CATALOG = {
         "strike ajustado pelo prêmio pago ou recebido. A probabilidade de lucro é medida "
         "em relação ao ponto de equilíbrio, pois esse é o preço que a posição realmente "
         "precisa superar.",
+        "app_title": "Options Lab",
+        "app_tagline": "Aprenda a mecânica de opções em contratos reais, antes de arriscar "
+        "dinheiro de verdade.",
+        "home_analyze_title": "Analisar um ticker",
+        "adjust_selection_title": "Ajustar seleção",
+        "ticker_label": "Ticker",
+        "ticker_placeholder": "ex.: AAPL",
+        "strategy_label": "Estratégia",
+        "expiration_override_label": "Vencimento personalizado",
+        "analyze_button": "Analisar",
+        "update_button": "Atualizar",
+        "watchlist_title": "Lista de acompanhamento",
+        "watchlist_empty": "Nenhum ticker ainda — adicione um acima.",
+        "watchlist_add_placeholder": "Adicionar ticker",
+        "add_to_watchlist_button": "Adicionar à lista",
+        "remove_button": "Remover",
+        "data_unavailable": "Dados indisponíveis",
+        "back_to_dashboard": "← Painel",
+        "download_pdf": "Baixar PDF",
+        "view_report": "Ver relatório",
+        "methodology_title": "Metodologia — todo número, verificável",
+        "methodology_intro": "Todo número acima vem do próprio motor matemático deste "
+        "projeto, calculado localmente, agora — nenhuma caixa-preta de terceiros. "
+        "Árvore de código-fonte completa:",
+        "methodology_col_metric": "Métrica",
+        "methodology_col_formula": "Fórmula",
+        "methodology_col_source": "Origem (arquivo :: função)",
+        "static_demo_title": "Demonstração estática — dados de amostra congelados",
+        "static_demo_body": "Esta página é um retrato para fins de portfólio, não o aplicativo "
+        "ao vivo. A ferramenta real roda localmente, buscando preços e cadeias de opções em tempo "
+        "real na API de paper trading da Alpaca, com um painel completo de lista de "
+        "acompanhamento e exportação em PDF.",
+        "static_index_intro": "Abaixo está um retrato real e congelado da página de relatório — "
+        "diagrama de payoff, gregas, probabilidade de lucro e a metodologia completa de "
+        "transparência. Experimente o modo escuro acima, depois abra a amostra (ela também leva a "
+        "uma versão em português e a uma visualização no modo Pro).",
+        "static_index_cta": "Abrir relatório de amostra",
     },
 }
 

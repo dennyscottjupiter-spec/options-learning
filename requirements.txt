@@ -5,6 +5,7 @@ alpaca-py>=0.33
 fastapi>=0.115
 uvicorn[standard]>=0.32
 jinja2>=3.1
+python-multipart>=0.0.12          # required by FastAPI to parse HTML <form> POSTs (watchlist add/remove)
 
 # HTML -> PDF, same template as the web page
 playwright>=1.48

@@ -1,0 +1,10 @@
+<dialog id="help-modal" class="help-modal">
+  <div class="help-modal-inner">
+    <button type="button" class="help-modal-close" onclick="document.getElementById('help-modal').close()" aria-label="Close">×</button>
+    {% if lang == 'pt-BR' %}
+      {% include "_help_content_pt.html.jinja" %}
+    {% else %}
+      {% include "_help_content_en.html.jinja" %}
+    {% endif %}
+  </div>
+</dialog>

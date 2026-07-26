@@ -10,6 +10,9 @@ archive/
 # Disk cache for Alpaca/yfinance responses
 cache/
 
+# Per-machine dashboard state (seeded from config.toml on first run)
+watchlist.json
+
 # Python
 __pycache__/
 *.pyc

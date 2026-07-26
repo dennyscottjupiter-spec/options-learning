@@ -1,0 +1,137 @@
+<h2>Como ler este aplicativo</h2>
+<p class="help-lede">Uma referência curta e fundamental para cada número que esta ferramenta
+mostra. Leia uma vez e depois use como um glossário sempre que um termo não for familiar.</p>
+
+<h3>O que é uma opção, de fato</h3>
+<p>Uma <strong>call</strong> é o direito (não a obrigação) de <em>comprar</em> 100 ações a um preço
+fixo (o <strong>strike</strong>) a qualquer momento antes de uma data de <strong>vencimento</strong>.
+Uma <strong>put</strong> é o direito de <em>vender</em> ao preço fixo. Você paga um
+<strong>prêmio</strong> hoje por esse direito — o preço da opção, cotado por ação, mas sempre
+representando um contrato de 100 ações, então um prêmio de $2,00 custa $200 do seu bolso.</p>
+
+<h3>As quatro estratégias que esta ferramenta monta</h3>
+<ul class="help-list">
+  <li><strong>Compra de Call (LEAPS)</strong> — compre uma call de longo prazo (6–24 meses) para
+  travar o preço de hoje em uma ação que você quer possuir mais no futuro, pagando uma fração do
+  preço da ação em vez do valor total. Perda máxima é o prêmio; o ganho é ilimitado.</li>
+  <li><strong>Venda de Put Coberta por Caixa</strong> — venda uma put, reservando o strike × 100
+  inteiro em dinheiro. Você recebe o prêmio agora. No pior caso, você é obrigado a comprar a ação
+  pelo strike — uma ação que você já queria, com desconto.</li>
+  <li><strong>Venda de Call Coberta</strong> — venda uma call contra 100 ações que você já possui.
+  Você recebe o prêmio; em troca, limita seu ganho acima do strike. Transforma ações paradas em
+  renda.</li>
+  <li><strong>Compra de Put Protetora</strong> — compre uma put contra ações que você já possui,
+  como um seguro. Isso limita sua perda pelo custo do prêmio, enquanto seu ganho permanece
+  totalmente aberto.</li>
+</ul>
+
+<h3>Painel de fundamentos</h3>
+<p>O <strong>preço atual</strong> é o último fechamento da ação — o número sobre o qual todo o
+resto deste relatório é construído. <strong>Setor</strong> e <strong>valor de mercado</strong> dão
+contexto rápido sobre o tipo e o tamanho da empresa. O <strong>próximo resultado</strong> importa
+mais do que parece: um movimento surpresa de resultados pode mexer com a ação muito mais do que um
+dia comum de negociação.</p>
+
+<h3>Avisos</h3>
+<p>Esta ferramenta nunca esconde um contrato ruim — ela sinaliza e deixa você ver o porquê. Um
+<strong>aviso de resultado</strong> significa que o contrato vence depois da próxima data de
+resultados, então tanto o preço quanto as estimativas de probabilidade abaixo são menos confiáveis
+atravessando essa data (a volatilidade implícita costuma despencar na manhã seguinte — efeito
+chamado de <em>IV crush</em>). Um <strong>aviso de liquidez</strong> significa que o spread de
+compra/venda ou o tamanho cotado está baixo, então você provavelmente perderia mais no spread do
+que um strike mais líquido custaria. Um <strong>aviso de poder de compra</strong> significa que a
+operação exige mais capital do que o poder de compra atual da sua conta simulada.</p>
+
+<h3>O contrato</h3>
+<ul class="help-list">
+  <li><strong>Strike</strong> — o preço fixo escrito no contrato.</li>
+  <li><strong>Ponto de equilíbrio (breakeven)</strong> — o strike ajustado pelo prêmio pago ou
+  recebido. É esse preço, não o strike, que a posição realmente precisa superar para dar lucro.</li>
+  <li><strong>Prêmio</strong> — o que a opção custa (ou paga a você) hoje, por contrato
+  (×100 ações).</li>
+  <li><strong>Lucro máximo / perda máxima</strong> — os melhores e piores resultados em dólares no
+  vencimento.</li>
+  <li><strong>Capital necessário</strong> — caixa ou margem que a posição imobiliza (o strike × 100
+  inteiro para uma put coberta por caixa; o prêmio para uma call comprada ou put protetora).</li>
+</ul>
+
+<h3>Gregas e volatilidade implícita</h3>
+<p>As gregas descrevem como o preço da opção reage a mudanças no mundo — cada uma isola uma
+variável.</p>
+<ul class="help-list">
+  <li><strong>Delta</strong> — quanto o preço da opção se move a cada $1 de movimento na ação.
+  Aproximadamente equivale à "probabilidade desta opção terminar dentro do dinheiro." Uma call com
+  delta 0,30 se comporta como possuir 30 ações.</li>
+  <li><strong>Gama</strong> — quão rápido o próprio delta muda conforme a ação se move. Gama alto
+  significa que a exposição direcional da posição pode mudar rapidamente.</li>
+  <li><strong>Theta</strong> — quanto valor a opção perde por dia corrido, tudo o mais constante.
+  Essa é a "corrosão do tempo" que todo operador de opções precisa respeitar — trabalha contra quem
+  compra opções e a favor de quem vende.</li>
+  <li><strong>Vega</strong> — quanto o preço da opção se move a cada 1 ponto percentual de mudança
+  na volatilidade implícita. Opções compradas ganham valor quando a volatilidade sobe; opções
+  vendidas perdem valor.</li>
+  <li><strong>Rho</strong> — sensibilidade a taxas de juros. Geralmente o menor efeito dos cinco,
+  mais relevante para LEAPS de longo prazo do que operações de curto prazo.</li>
+  <li><strong>Volatilidade implícita (IV)</strong> — a previsão do mercado de quanto a ação vai
+  oscilar, extraída do preço da opção. IV mais alta significa prêmios mais caros e movimentos
+  esperados maiores.</li>
+</ul>
+<p>Sempre que a Alpaca não cota as gregas para um contrato (comum em contratos ilíquidos ou que
+vencem no mesmo dia), esta ferramenta as calcula localmente com seu próprio motor Black-Scholes e
+as rotula como "calculado localmente" — assim você sempre sabe se um número veio do mercado ou de
+um modelo.</p>
+
+<h3>Probabilidade de lucro</h3>
+<p>Esta é a seção com o maior padrão de rigor em todo o relatório — veja o bloco de
+<strong>Metodologia</strong> logo abaixo dela em cada relatório, com a fórmula exata e o arquivo de
+origem por trás de cada número. Em linguagem simples:</p>
+<ul class="help-list">
+  <li><strong>Fórmula fechada (lognormal)</strong> — uma fórmula de livro-texto (o próprio termo de
+  probabilidade de Black-Scholes) assumindo que o preço futuro da ação segue uma distribuição
+  lognormal. Rápida, exata dada essa suposição, e a primeira resposta padrão da indústria.</li>
+  <li><strong>Monte Carlo</strong> — em vez de confiar na fórmula, esta ferramenta de fato simula
+  100.000 trajetórias possíveis de preço futuro para a ação e conta quantas vezes a posição termina
+  lucrativa. É a mesma suposição da fórmula fechada (movimento browniano geométrico), verificada
+  por força bruta em vez de álgebra — se as duas divergirem mais do que o esperado, o relatório
+  avisa.</li>
+  <li><strong>Probabilidade de toque</strong> — a fórmula fechada e o Monte Carlo respondem "onde o
+  preço termina no vencimento?" Esta pergunta algo diferente, e frequentemente mais prático: "o
+  preço toca o ponto de equilíbrio em algum momento antes do vencimento?" Costuma ser maior que a
+  probabilidade terminal, já que um preço pode tocar um nível e voltar.</li>
+  <li><strong>Ganho médio / perda média</strong> — das mesmas 100.000 trajetórias simuladas, o
+  resultado médio em dólares entre as trajetórias que terminaram lucrativas, e entre as que não
+  terminaram.</li>
+  <li><strong>Pontuação ajustada ao risco</strong> — combina probabilidade, ganho médio, perda
+  média e capital em risco em um único número anualizado, usado para ranquear contratos candidatos
+  entre si. Responde "qual contrato oferece o melhor retorno por dólar arriscado por ano," não
+  "qual contrato vai vencer."</li>
+</ul>
+<p>Uma ressalva honesta que se aplica a tudo acima: sob as próprias premissas neutras a risco do
+modelo, o lucro <em>esperado</em> de qualquer opção é aproximadamente zero menos custos de
+negociação. Essas probabilidades descrevem resultados prováveis sob a precificação atual do
+mercado — não são uma vantagem positiva. Uma operação lucrativa, no fim, exige uma visão direcional
+que este modelo não possui.</p>
+
+<h3>Panorama técnico</h3>
+<ul class="help-list">
+  <li><strong>MM 20 / 50 / 200</strong> — médias móveis simples dos últimos 20, 50 e 200 dias de
+  negociação. Preço empilhado acima de médias ascendentes é a definição clássica de livro-texto de
+  uma tendência de alta.</li>
+  <li><strong>IFR (14)</strong> — Índice de Força Relativa, um medidor de momentum de 0 a 100.
+  Tradicionalmente, acima de 70 é considerado "sobrecomprado" e abaixo de 30 "sobrevendido," embora
+  tendências fortes possam permanecer em extremos por muito tempo.</li>
+  <li><strong>Volatilidade histórica (30d / 90d)</strong> — quanto a ação de fato se moveu,
+  anualizada, nos últimos 30 e 90 dias — a contraparte realizada da volatilidade implícita. O
+  percentil mostrado ranqueia a leitura atual contra o último ano, para você saber se a volatilidade
+  de hoje está incomumente calma ou incomumente selvagem para esta ação específica.</li>
+  <li><strong>Faixa de 52 semanas</strong> — o menor e o maior fechamento no último ano.</li>
+  <li><strong>Viés direcional</strong> — uma leitura simples de como as médias móveis estão
+  empilhadas: altista, baixista, misto, ou histórico ainda insuficiente.</li>
+</ul>
+
+<h3>Usando esta ferramenta com responsabilidade</h3>
+<p>Toda operação neste aplicativo roda contra a conta de <strong>paper trading</strong> da Alpaca —
+dados reais de mercado, zero dinheiro real. Isso é proposital: a forma mais rápida de construir
+intuição real sobre opções é observar muitos contratos se desenrolarem sem o custo de errar. Nada
+aqui é recomendação de investimento, e nenhuma ordem é enviada automaticamente — este é um ambiente
+de aprendizado para entender a mecânica antes de você arriscar um único dólar de verdade.</p>
