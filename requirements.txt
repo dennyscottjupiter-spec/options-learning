@@ -1,0 +1,26 @@
+# Alpaca official SDK — market data, option chains, paper account/positions
+alpaca-py>=0.33
+
+# Web app
+fastapi>=0.115
+uvicorn[standard]>=0.32
+jinja2>=3.1
+
+# HTML -> PDF, same template as the web page
+playwright>=1.48
+
+# Credential Manager access (DPAPI-backed on Windows)
+keyring>=25.4
+
+# Math engine
+numpy>=2.1
+scipy>=1.14
+
+# Fundamentals: market cap, sector, next earnings date (Alpaca has none of these)
+yfinance>=0.2.44
+
+# Config
+tomli>=2.0; python_version < "3.11"
+
+# Tests
+pytest>=8.3

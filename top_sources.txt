@@ -1,0 +1,9 @@
+# TOP SOURCES — options-learning
+# Canonical, first-stop references for this project. Always search these BEFORE
+# generic web search when the question is about Alpaca / the Alpaca MCP server.
+
+## Alpaca MCP Server (primary)
+https://alpaca.markets/mcp-server            # product page / overview
+https://github.com/alpacahq/alpaca-mcp-server # source of truth: tools, env vars, setup
+https://docs.alpaca.markets/us/docs/alpaca-mcp-server # official docs: install + tool reference
+https://alpaca.markets/learn/mcp-trading-with-claude-alpaca-google-sheets # official guide: google sheets integrationhttps://alpaca.markets/learn/tag/app-development # remote setup: docker + cloud deploymentalpaca.markets # machine-readable endpoint: api map for ai agentshttps://mcpservers.org/servers/alpacahq/alpaca-mcp-server # smithery registry: cli-automated installationhttps://alpaca.markets/blog/introducing-official-mcp-server-enabling-multi-market-trading-with-ai-interfaces/ # official blog: security architecture & risk parameters

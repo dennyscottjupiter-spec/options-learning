@@ -1,0 +1,32 @@
+# options-learning configuration
+# Non-secret settings only. Credentials live in Windows Credential Manager (see scripts/set_credentials.py).
+
+[alpaca]
+base_url = "https://paper-api.alpaca.markets/v2"
+data_feed = "indicative"          # free feed; switch to "opra" ($99/mo) here when ready
+rate_limit_per_min = 200
+
+[math]
+risk_free_rate = 0.043            # ~4.3%, current short-term T-bill yield; POP is not sensitive to small changes here
+monte_carlo_paths = 100000
+monte_carlo_seed = 7              # fixed seed -> reproducible runs
+pop_disagreement_flag_pp = 1.0    # flag if closed-form vs Monte Carlo POP differ by more than this many percentage points
+
+[strategies]
+leaps_min_dte = 180               # 6 months
+leaps_max_dte = 730                # 24 months
+premium_min_dte = 30
+premium_max_dte = 45
+
+[liquidity]
+min_open_interest = 100
+min_volume = 10
+max_bid_ask_spread_pct = 0.10     # of mid price
+
+[report]
+default_mode = "learn"            # "learn" | "pro"
+default_language = "en"           # "en" | "pt-BR"
+archive_dir = "archive"
+
+[watchlist]
+tickers = ["AAPL", "MSFT", "NVDA", "V"]

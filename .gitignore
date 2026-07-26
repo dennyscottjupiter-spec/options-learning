@@ -1,0 +1,27 @@
+# Secrets — never committed. Credentials live in Windows Credential Manager, not files.
+*.env
+.env
+*.pem
+*.key
+
+# Generated reports (auto-archived locally, not versioned)
+archive/
+
+# Disk cache for Alpaca/yfinance responses
+cache/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Playwright
+test-results/
+playwright-report/
+
+# OS / editor
+.vscode/
+Thumbs.db
