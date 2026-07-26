@@ -1,25 +1,29 @@
 """
-Spawns alpaca-mcp-server with credentials injected into its environment at
-process start — never written to a .env file or any config on disk.
+Launches the official Alpaca MCP server (github.com/alpacahq/alpaca-mcp-server,
+installed via requirements.txt) with credentials injected from Windows
+Credential Manager at process start — no plaintext .env file or MCP-config
+secret ever touches disk.
 
-Usage: point your MCP client (e.g. Claude Code's .mcp.json) at this script
-instead of `uvx alpaca-mcp-server` directly:
+Read-only by design: ALPACA_TOOLSETS excludes "trading" (the order-placement
+and position-closing tools), and ALPACA_PAPER_TRADE is hardcoded to "true" —
+this project never places an order and never touches a live account, on
+paper or otherwise.
 
-    { "command": "python3", "args": ["scripts/run_mcp.py"] }
+Registered with Claude Code via:
 
-Requires `uvx` (ships with `uv`) on PATH, and credentials already set via
-scripts/set_credentials.py.
+    claude mcp add options-learning-alpaca -- <venv-python> scripts/run_mcp.py
 """
 from __future__ import annotations
 
 import os
-import subprocess
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from optionslab.creds import CredentialsNotSetError, get_alpaca_credentials  # noqa: E402
+
+READ_ONLY_TOOLSETS = "account,watchlists,assets,stock-data,crypto-data,options-data,corporate-actions"
 
 
 def main() -> None:
@@ -29,12 +33,15 @@ def main() -> None:
         print(str(e), file=sys.stderr)
         sys.exit(1)
 
-    env = os.environ.copy()
-    env["ALPACA_API_KEY"] = api_key
-    env["ALPACA_SECRET_KEY"] = api_secret
-    env["ALPACA_PAPER_TRADE"] = "true"
+    os.environ["ALPACA_API_KEY"] = api_key
+    os.environ["ALPACA_SECRET_KEY"] = api_secret
+    os.environ["ALPACA_PAPER_TRADE"] = "true"
+    os.environ["ALPACA_TOOLSETS"] = READ_ONLY_TOOLSETS
 
-    subprocess.run(["uvx", "alpaca-mcp-server"], env=env, check=True)
+    from alpaca_mcp_server.cli import main as alpaca_main
+
+    sys.argv = [sys.argv[0]]  # this wrapper takes no args of its own
+    alpaca_main()
 
 
 if __name__ == "__main__":

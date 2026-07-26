@@ -21,6 +21,12 @@ pandas>=2.2                       # transitive via alpaca-py, pinned explicitly 
 # Fundamentals: market cap, sector, next earnings date (Alpaca has none of these)
 yfinance>=0.2.44
 
+# Official Alpaca MCP server (github.com/alpacahq/alpaca-mcp-server) — gives
+# Claude live conversational access to paper account/market data. Launched
+# only via scripts/run_mcp.py, which injects credentials and restricts
+# toolsets to read-only (never exposes the order-placement tools).
+alpaca-mcp-server>=2.1
+
 # Config
 tomli>=2.0; python_version < "3.11"
 
