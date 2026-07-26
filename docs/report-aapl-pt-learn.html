@@ -20,7 +20,7 @@
   <header class="report-header">
     <div class="titles">
       <h1>AAPL — Compra de Call (LEAPS)</h1>
-      <p class="subtitle">Apple Inc. · Gerado em 2026-07-26 16:07</p>
+      <p class="subtitle">Apple Inc. · Gerado em 2026-07-26 16:16</p>
     </div>
     <div class="header-controls">
       <nav class="pill-toggle" aria-label="Report depth">
@@ -272,9 +272,12 @@ de aprendizado para entender a mecânica antes de você arriscar um único dóla
 
   <section class="panel">
     <h2>O contrato</h2>
+    
+    <p class="section-explain">Este painel mostra o contrato de opção exato selecionado e quanto ele vale: o strike contra o qual você está operando, o prêmio que você paga ou recebe, e os extremos de lucro/prejuízo se mantido até o vencimento.</p>
+    
     <div class="stat-row">
       <div class="stat">
-        <span class="label">Strike</span>
+        <span class="label">Strike<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O preço fixo pelo qual você pode comprar (call) ou vender (put) as ações caso a opção seja exercida.</span></span></span>
         <span class="value">$300.00 <span class="moneyness-badge moneyness-itm">ITM</span></span>
       </div>
       <div class="stat">
@@ -286,7 +289,7 @@ de aprendizado para entender a mecânica antes de você arriscar um único dóla
         <span class="value">326</span>
       </div>
       <div class="stat stat-wide">
-        <span class="label">Prêmio</span>
+        <span class="label">Prêmio<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O que você paga ou recebe por este contrato hoje, dividido abaixo em suas partes intrínseca e extrínseca.</span></span></span>
         <span class="value">$62.17</span>
         <div class="premium-split-bar">
           <div class="premium-split-intrinsic" style="width: 53.11243364967023%"></div>
@@ -298,23 +301,23 @@ de aprendizado para entender a mecânica antes de você arriscar um único dóla
         </div>
       </div>
       <div class="stat">
-        <span class="label">Ponto de equilíbrio</span>
+        <span class="label">Ponto de equilíbrio<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O strike ajustado pelo prêmio pago ou recebido — o preço que a ação realmente precisa superar para esta operação não dar nem lucro nem prejuízo.</span></span></span>
         <span class="value">$362.17</span>
       </div>
       <div class="stat">
-        <span class="label">Lucro máximo</span>
+        <span class="label">Lucro máximo<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O melhor resultado possível para esta posição se mantida até o vencimento, antes das comissões.</span></span></span>
         <span class="value pl-positive">
           Ilimitado
         </span>
         
       </div>
       <div class="stat">
-        <span class="label">Perda máxima</span>
+        <span class="label">Perda máxima<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O pior resultado possível para esta posição se mantida até o vencimento, antes das comissões.</span></span></span>
         <span class="value pl-negative">-$6,217.00</span>
         <span class="caption">Líquido de comissões: -$6,218.30</span>
       </div>
       <div class="stat">
-        <span class="label">Capital necessário</span>
+        <span class="label">Capital necessário<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O caixa ou a margem que esta operação imobiliza — usado como denominador da pontuação ajustada ao risco abaixo.</span></span></span>
         <span class="value">$6,217.00</span>
       </div>
     </div>
@@ -326,29 +329,32 @@ de aprendizado para entender a mecânica antes de você arriscar um único dóla
 
   <section class="panel">
     <h2>Gregas e volatilidade implícita</h2>
+    
+    <p class="section-explain">As gregas medem como o preço da opção reage a mudanças no preço da ação, no tempo e na volatilidade. A volatilidade implícita é a estimativa do próprio mercado de quanto a ação pode se mover até o vencimento.</p>
+    
     <div class="stat-row">
       <div class="stat">
-        <span class="label">Delta</span>
+        <span class="label">Delta<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Quanto o preço da opção se move a cada $1 de movimento na ação. Também lido como uma chance aproximada de terminar dentro do dinheiro.</span></span></span>
         <span class="value ">0.741</span>
       </div>
       <div class="stat">
-        <span class="label">Gama</span>
+        <span class="label">Gama<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Com que rapidez o próprio delta muda conforme o preço da ação se move — um gamma maior significa que o delta muda mais rápido.</span></span></span>
         <span class="value ">0.0034</span>
       </div>
       <div class="stat">
-        <span class="label">Theta (por dia)</span>
+        <span class="label">Theta (por dia)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O valor que esta opção perde a cada dia apenas pela passagem do tempo, mantendo fixos o preço da ação e a volatilidade.</span></span></span>
         <span class="value ">-0.068</span>
       </div>
       <div class="stat">
-        <span class="label">Vega (por 1% de vol.)</span>
+        <span class="label">Vega (por 1% de vol.)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Quanto o preço da opção se move para cada ponto percentual de mudança na volatilidade implícita.</span></span></span>
         <span class="value ">1.022</span>
       </div>
       <div class="stat">
-        <span class="label">Rho (por 1% de juros)</span>
+        <span class="label">Rho (por 1% de juros)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Quanto o preço da opção se move para cada ponto percentual de mudança nas taxas de juros — normalmente o menor efeito entre as cinco gregas.</span></span></span>
         <span class="value ">1.658</span>
       </div>
       <div class="stat">
-        <span class="label">Volatilidade implícita</span>
+        <span class="label">Volatilidade implícita<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">A expectativa do próprio mercado de quanto a ação vai oscilar até o vencimento, implícita no preço deste contrato.</span></span></span>
         <span class="value ">30.0%</span>
       </div>
     </div>
@@ -361,29 +367,32 @@ de aprendizado para entender a mecânica antes de você arriscar um único dóla
 
   <section class="panel">
     <h2>Probabilidade de lucro</h2>
+    
+    <p class="section-explain">Estes números estimam a chance de esta operação ser lucrativa, usando dois métodos independentes — uma fórmula fechada e uma simulação de Monte Carlo — para que você veja onde concordam e onde divergem.</p>
+    
     <div class="stat-row">
       <div class="stat">
-        <span class="label">Fórmula fechada (lognormal)</span>
+        <span class="label">Fórmula fechada (lognormal)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">A probabilidade de esta operação estar pelo menos no ponto de equilíbrio no vencimento, por uma fórmula fechada que assume preços lognormais.</span></span></span>
         <span class="value">38.1%</span>
       </div>
       <div class="stat">
-        <span class="label">Monte Carlo (100.000 simulações)</span>
+        <span class="label">Monte Carlo (100.000 simulações)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">A mesma probabilidade de lucro, estimada em vez disso simulando milhares de trajetórias de preço aleatórias — uma checagem cruzada da fórmula acima.</span></span></span>
         <span class="value">38.1%</span>
       </div>
       <div class="stat">
-        <span class="label">Probabilidade de tocar o ponto de equilíbrio antes do vencimento</span>
+        <span class="label">Probabilidade de tocar o ponto de equilíbrio antes do vencimento<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">A chance de o preço alcançar o ponto de equilíbrio em algum momento antes do vencimento — sempre maior que a chance de terminar ali, já que basta acontecer uma vez.</span></span></span>
         <span class="value">73.7%</span>
       </div>
       <div class="stat">
-        <span class="label">Ganho médio (simulado)</span>
+        <span class="label">Ganho médio (simulado)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O lucro médio entre as trajetórias simuladas que terminam lucrativas.</span></span></span>
         <span class="value pl-positive">$8,524.33</span>
       </div>
       <div class="stat">
-        <span class="label">Perda média (simulada)</span>
+        <span class="label">Perda média (simulada)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O prejuízo médio entre as trajetórias simuladas que terminam não lucrativas.</span></span></span>
         <span class="value pl-negative">-$4,941.21</span>
       </div>
       <div class="stat">
-        <span class="label">Pontuação ajustada ao risco (anualizada)</span>
+        <span class="label">Pontuação ajustada ao risco (anualizada)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Retorno ajustado ao risco por dólar em risco, anualizado — a métrica usada para ranquear este contrato contra suas alternativas.</span></span></span>
         <span class="value">0.0330</span>
       </div>
     </div>
@@ -453,39 +462,42 @@ de aprendizado para entender a mecânica antes de você arriscar um único dóla
 
   <section class="panel">
     <h2>Panorama técnico</h2>
+    
+    <p class="section-explain">Um retrato da tendência recente de preço e da volatilidade da ação, usado apenas para julgar se o cenário atual está alinhado com as premissas da estratégia — não para prever para onde o preço vai.</p>
+    
     <div class="stat-row">
       <div class="stat">
-        <span class="label">Média Móvel 20</span>
+        <span class="label">Média Móvel 20<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O preço médio de fechamento da ação nos últimos 20 pregões — uma linha de tendência de curto prazo.</span></span></span>
         <span class="value">$314.39</span>
       </div>
       <div class="stat">
-        <span class="label">Média Móvel 50</span>
+        <span class="label">Média Móvel 50<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O preço médio de fechamento da ação nos últimos 50 pregões — uma linha de tendência de médio prazo.</span></span></span>
         <span class="value">$306.23</span>
       </div>
       <div class="stat">
-        <span class="label">Média Móvel 200</span>
+        <span class="label">Média Móvel 200<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">O preço médio de fechamento da ação nos últimos 200 pregões — uma linha de tendência de longo prazo.</span></span></span>
         <span class="value">$275.98</span>
       </div>
       <div class="stat">
-        <span class="label">IFR (14)</span>
+        <span class="label">IFR (14)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Índice de Força Relativa de 14 dias: um indicador de momentum de 0 a 100, em que leituras acima de 70 sugerem sobrecompra e abaixo de 30 sugerem sobrevenda.</span></span></span>
         <span class="value">65.2</span>
       </div>
       <div class="stat">
-        <span class="label">Volatilidade histórica (30d)</span>
+        <span class="label">Volatilidade histórica (30d)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Quanto a ação realmente se moveu nos últimos 30 dias, anualizado — compare com a volatilidade implícita acima para ver se as opções estão precificando mais ou menos movimento do que realmente ocorreu.</span></span></span>
         <span class="value">33.6%</span>
         <span class="caption">94 percentil do último ano</span>
       </div>
       <div class="stat">
-        <span class="label">Volatilidade histórica (90d)</span>
+        <span class="label">Volatilidade histórica (90d)<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">A mesma medida de volatilidade histórica em uma janela mais longa, de 90 dias, suavizando o ruído de curto prazo.</span></span></span>
         <span class="value">26.9%</span>
         <span class="caption">99 percentil do último ano</span>
       </div>
       <div class="stat">
-        <span class="label">Faixa de 52 semanas</span>
+        <span class="label">Faixa de 52 semanas<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Os preços de fechamento mais baixo e mais alto da ação no último ano.</span></span></span>
         <span class="value" style="font-size: 15px;">$202.38 – $333.74</span>
       </div>
       <div class="stat">
-        <span class="label">Viés direcional</span>
+        <span class="label">Viés direcional<span class="tip" tabindex="0"><span class="tip-icon" aria-hidden="true">?</span><span class="tip-text">Uma leitura simples da direção da tendência a partir de onde o preço está em relação às suas médias móveis — não é uma previsão, apenas o posicionamento atual.</span></span></span>
         <span class="value" style="font-size: 15px;">Altista (preço acima de médias ascendentes)</span>
       </div>
     </div>

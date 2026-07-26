@@ -156,6 +156,73 @@ CATALOG = {
         "footer_disclaimer": "Educational tool only. Data from Alpaca's paper trading API "
         "and yfinance. Not investment advice — this is a practice environment for "
         "learning options mechanics, not a signal to trade real money.",
+        "section_explain_contract": "This panel shows the exact option contract selected "
+        "and what it's worth: the strike you're trading against, the premium you pay or "
+        "collect, and the profit/loss extremes if held to expiration.",
+        "section_explain_greeks": "Greeks measure how the option's price reacts to changes "
+        "in the stock price, time, and volatility. Implied volatility is the market's own "
+        "estimate of how much the stock might move before expiration.",
+        "section_explain_probability": "These figures estimate how likely this trade is to "
+        "be profitable, using two independent methods — a closed-form formula and a Monte "
+        "Carlo simulation — so you can see where they agree, and where they don't.",
+        "section_explain_technical": "A snapshot of the stock's recent price trend and "
+        "volatility, used only to judge whether the current setup lines up with the "
+        "strategy's assumptions — not to predict where the price is going.",
+        "explain_strike": "The fixed price at which you may buy (call) or sell (put) the "
+        "shares if the option is exercised.",
+        "explain_premium": "What you pay or receive for this contract today, split below "
+        "into its intrinsic and extrinsic parts.",
+        "explain_breakeven": "The strike adjusted for the premium paid or received — the "
+        "price the stock actually needs to clear for this trade to make or lose nothing.",
+        "explain_max_profit": "The best possible outcome for this position if held to "
+        "expiration, before commissions.",
+        "explain_max_loss": "The worst possible outcome for this position if held to "
+        "expiration, before commissions.",
+        "explain_capital_required": "The cash or margin this trade ties up — used as the "
+        "denominator for the risk-adjusted score below.",
+        "explain_delta": "How much the option's price moves per $1 move in the stock. Also "
+        "read as a rough chance of finishing in-the-money.",
+        "explain_gamma": "How fast delta itself changes as the stock price moves — higher "
+        "gamma means delta shifts more quickly.",
+        "explain_theta": "The value this option loses each day purely from time passing, "
+        "holding the stock price and volatility fixed.",
+        "explain_vega": "How much the option's price moves for a 1-percentage-point change "
+        "in implied volatility.",
+        "explain_rho": "How much the option's price moves for a 1-percentage-point change "
+        "in interest rates — usually the smallest effect of the five Greeks.",
+        "explain_implied_volatility": "The market's own expectation of how much the stock "
+        "will swing before expiration, implied by this contract's price.",
+        "explain_pop_closed_form": "The probability this trade is at least break-even at "
+        "expiration, from a closed-form formula assuming lognormal stock prices.",
+        "explain_pop_monte_carlo": "The same probability of profit, estimated instead by "
+        "simulating thousands of random price paths — a cross-check on the formula above.",
+        "explain_probability_of_touch": "The chance the price reaches breakeven at any "
+        "point before expiration — always higher than the chance it finishes there, since "
+        "it only needs to happen once.",
+        "explain_avg_win": "The average profit across simulated paths that end up "
+        "profitable.",
+        "explain_avg_loss": "The average loss across simulated paths that end up "
+        "unprofitable.",
+        "explain_score": "Risk-adjusted return per dollar at risk, annualized — the metric "
+        "used to rank this contract against its alternatives.",
+        "explain_sma20": "The stock's average closing price over the last 20 trading days "
+        "— a short-term trend line.",
+        "explain_sma50": "The stock's average closing price over the last 50 trading days "
+        "— a medium-term trend line.",
+        "explain_sma200": "The stock's average closing price over the last 200 trading "
+        "days — a long-term trend line.",
+        "explain_rsi14": "Relative Strength Index over 14 days: a momentum gauge from "
+        "0-100, where readings above 70 suggest overbought and below 30 suggest oversold.",
+        "explain_hv30": "How much the stock actually moved over the last 30 days, "
+        "annualized — compare against implied volatility above to see whether options are "
+        "pricing in more or less movement than has actually occurred.",
+        "explain_hv90": "The same historical volatility measure over a longer, 90-day "
+        "window, smoothing out short-term noise.",
+        "explain_range_52w": "The stock's lowest and highest closing prices over the past "
+        "year.",
+        "explain_directional_bias": "A simple read of trend direction from where the price "
+        "sits relative to its moving averages — not a prediction, just current "
+        "positioning.",
         "breakeven_vs_strike_note": "Notice breakeven isn't the strike — it's the strike "
         "adjusted for the premium paid or received. Probability of profit is measured "
         "against breakeven, since that's the price the position actually needs to clear.",
@@ -317,6 +384,78 @@ CATALOG = {
         "trading da Alpaca e do yfinance. Não é recomendação de investimento — este é um "
         "ambiente de prática para aprender a mecânica de opções, não um sinal para operar "
         "com dinheiro real.",
+        "section_explain_contract": "Este painel mostra o contrato de opção exato "
+        "selecionado e quanto ele vale: o strike contra o qual você está operando, o "
+        "prêmio que você paga ou recebe, e os extremos de lucro/prejuízo se mantido até o "
+        "vencimento.",
+        "section_explain_greeks": "As gregas medem como o preço da opção reage a mudanças "
+        "no preço da ação, no tempo e na volatilidade. A volatilidade implícita é a "
+        "estimativa do próprio mercado de quanto a ação pode se mover até o vencimento.",
+        "section_explain_probability": "Estes números estimam a chance de esta operação "
+        "ser lucrativa, usando dois métodos independentes — uma fórmula fechada e uma "
+        "simulação de Monte Carlo — para que você veja onde concordam e onde divergem.",
+        "section_explain_technical": "Um retrato da tendência recente de preço e da "
+        "volatilidade da ação, usado apenas para julgar se o cenário atual está alinhado "
+        "com as premissas da estratégia — não para prever para onde o preço vai.",
+        "explain_strike": "O preço fixo pelo qual você pode comprar (call) ou vender (put) "
+        "as ações caso a opção seja exercida.",
+        "explain_premium": "O que você paga ou recebe por este contrato hoje, dividido "
+        "abaixo em suas partes intrínseca e extrínseca.",
+        "explain_breakeven": "O strike ajustado pelo prêmio pago ou recebido — o preço que "
+        "a ação realmente precisa superar para esta operação não dar nem lucro nem "
+        "prejuízo.",
+        "explain_max_profit": "O melhor resultado possível para esta posição se mantida "
+        "até o vencimento, antes das comissões.",
+        "explain_max_loss": "O pior resultado possível para esta posição se mantida até o "
+        "vencimento, antes das comissões.",
+        "explain_capital_required": "O caixa ou a margem que esta operação imobiliza — "
+        "usado como denominador da pontuação ajustada ao risco abaixo.",
+        "explain_delta": "Quanto o preço da opção se move a cada $1 de movimento na ação. "
+        "Também lido como uma chance aproximada de terminar dentro do dinheiro.",
+        "explain_gamma": "Com que rapidez o próprio delta muda conforme o preço da ação se "
+        "move — um gamma maior significa que o delta muda mais rápido.",
+        "explain_theta": "O valor que esta opção perde a cada dia apenas pela passagem do "
+        "tempo, mantendo fixos o preço da ação e a volatilidade.",
+        "explain_vega": "Quanto o preço da opção se move para cada ponto percentual de "
+        "mudança na volatilidade implícita.",
+        "explain_rho": "Quanto o preço da opção se move para cada ponto percentual de "
+        "mudança nas taxas de juros — normalmente o menor efeito entre as cinco gregas.",
+        "explain_implied_volatility": "A expectativa do próprio mercado de quanto a ação "
+        "vai oscilar até o vencimento, implícita no preço deste contrato.",
+        "explain_pop_closed_form": "A probabilidade de esta operação estar pelo menos no "
+        "ponto de equilíbrio no vencimento, por uma fórmula fechada que assume preços "
+        "lognormais.",
+        "explain_pop_monte_carlo": "A mesma probabilidade de lucro, estimada em vez disso "
+        "simulando milhares de trajetórias de preço aleatórias — uma checagem cruzada da "
+        "fórmula acima.",
+        "explain_probability_of_touch": "A chance de o preço alcançar o ponto de "
+        "equilíbrio em algum momento antes do vencimento — sempre maior que a chance de "
+        "terminar ali, já que basta acontecer uma vez.",
+        "explain_avg_win": "O lucro médio entre as trajetórias simuladas que terminam "
+        "lucrativas.",
+        "explain_avg_loss": "O prejuízo médio entre as trajetórias simuladas que terminam "
+        "não lucrativas.",
+        "explain_score": "Retorno ajustado ao risco por dólar em risco, anualizado — a "
+        "métrica usada para ranquear este contrato contra suas alternativas.",
+        "explain_sma20": "O preço médio de fechamento da ação nos últimos 20 pregões — uma "
+        "linha de tendência de curto prazo.",
+        "explain_sma50": "O preço médio de fechamento da ação nos últimos 50 pregões — uma "
+        "linha de tendência de médio prazo.",
+        "explain_sma200": "O preço médio de fechamento da ação nos últimos 200 pregões — "
+        "uma linha de tendência de longo prazo.",
+        "explain_rsi14": "Índice de Força Relativa de 14 dias: um indicador de momentum de "
+        "0 a 100, em que leituras acima de 70 sugerem sobrecompra e abaixo de 30 sugerem "
+        "sobrevenda.",
+        "explain_hv30": "Quanto a ação realmente se moveu nos últimos 30 dias, "
+        "anualizado — compare com a volatilidade implícita acima para ver se as opções "
+        "estão precificando mais ou menos movimento do que realmente ocorreu.",
+        "explain_hv90": "A mesma medida de volatilidade histórica em uma janela mais "
+        "longa, de 90 dias, suavizando o ruído de curto prazo.",
+        "explain_range_52w": "Os preços de fechamento mais baixo e mais alto da ação no "
+        "último ano.",
+        "explain_directional_bias": "Uma leitura simples da direção da tendência a partir "
+        "de onde o preço está em relação às suas médias móveis — não é uma previsão, "
+        "apenas o posicionamento atual.",
         "breakeven_vs_strike_note": "Note que o ponto de equilíbrio não é o strike — é o "
         "strike ajustado pelo prêmio pago ou recebido. A probabilidade de lucro é medida "
         "em relação ao ponto de equilíbrio, pois esse é o preço que a posição realmente "
