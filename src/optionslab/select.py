@@ -195,7 +195,18 @@ def select_best(
     enriched.sort(key=lambda c: abs((c["delta"] or 0) - target_delta))
     band = enriched[:_CANDIDATE_BAND]
 
-    evaluated = [evaluate_contract(c, strategy_type, S, r, mc_paths, mc_seed) for c in band]
+    # Two-phase evaluation: a cheap screening pass (small path count) ranks
+    # the whole band fast, then only the top 2 get the full-precision
+    # simulation the report actually shows. On a dozen candidates this is the
+    # difference between ~12 full Monte Carlo runs and ~2 — the screening
+    # pass is noisier but score ordering is stable enough to trust for
+    # picking who's worth simulating precisely.
+    screen_paths = min(mc_paths, 5_000)
+    screened = [evaluate_contract(c, strategy_type, S, r, screen_paths, mc_seed) for c in band]
+    screened.sort(key=lambda e: e["score"], reverse=True)
+
+    top_contracts = [e["contract"] for e in screened[:2]]
+    evaluated = [evaluate_contract(c, strategy_type, S, r, mc_paths, mc_seed) for c in top_contracts]
     evaluated.sort(key=lambda e: e["score"], reverse=True)
 
     account = market.get_account()
@@ -203,15 +214,19 @@ def select_best(
     best["affordable"] = best["strategy"].capital_required <= account["buying_power"]
 
     runner_up = evaluated[1] if len(evaluated) > 1 else None
-    why_best = None
+    # Raw comparison numbers, not a formatted sentence — this module has no
+    # i18n knowledge; report.py fills the localized "why #1 beat #2" template.
+    why_best_data = None
     if runner_up:
-        margin = best["score"] - runner_up["score"]
-        why_best = (
-            f"#1 ({best['contract']['symbol']}, strike {best['strategy'].strike:g}) scores "
-            f"{best['score']:.3f} annualized risk-adjusted return per dollar at risk, vs #2 "
-            f"({runner_up['contract']['symbol']}, strike {runner_up['strategy'].strike:g}) at "
-            f"{runner_up['score']:.3f} — a {margin:.3f} edge."
-        )
+        why_best_data = {
+            "best_symbol": best["contract"]["symbol"],
+            "best_strike": best["strategy"].strike,
+            "best_score": best["score"],
+            "runner_up_symbol": runner_up["contract"]["symbol"],
+            "runner_up_strike": runner_up["strategy"].strike,
+            "runner_up_score": runner_up["score"],
+            "margin": best["score"] - runner_up["score"],
+        }
 
     return {
         "ticker": ticker,
@@ -220,7 +235,7 @@ def select_best(
         "target_delta": target_delta,
         "best": best,
         "runner_up": runner_up,
-        "why_best": why_best,
-        "candidates_evaluated": len(evaluated),
+        "why_best_data": why_best_data,
+        "candidates_evaluated": len(screened),
         "account": account,
     }

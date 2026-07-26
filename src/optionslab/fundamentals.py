@@ -31,6 +31,7 @@ def get_fundamentals(symbol: str) -> dict:
     next_earnings = earnings_dates[0].isoformat() if earnings_dates else None
 
     result = {
+        "company_name": info.get("longName") or info.get("shortName") or symbol,
         "market_cap": info.get("marketCap"),
         "sector": info.get("sector"),
         "next_earnings_date": next_earnings,

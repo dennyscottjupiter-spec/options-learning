@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ s.report_title }} — {{ ticker }}</title>
+<link rel="stylesheet" href="/static/css/report.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="report-header">
+    <div class="titles">
+      <h1>{{ ticker }} — {{ strategy_name }}</h1>
+      <p class="subtitle">{{ company_name }} · {{ s.generated_on }} {{ generated_at }}</p>
+    </div>
+    <div class="header-controls">
+      <nav class="pill-toggle" aria-label="Report depth">
+        <a href="{{ nav.mode_learn_href }}" class="{{ 'active' if mode == 'learn' else '' }}">{{ s.mode_learn }}</a>
+        <a href="{{ nav.mode_pro_href }}" class="{{ 'active' if mode == 'pro' else '' }}">{{ s.mode_pro }}</a>
+      </nav>
+      <a class="flag-toggle" href="{{ nav.lang_toggle_href }}">🇧🇷 {{ s.lang_toggle }}</a>
+    </div>
+  </header>
+
+  <section class="panel">
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">{{ s.spot_price }}</span>
+        <span class="value">{{ spot_price | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.sector }}</span>
+        <span class="value" style="font-family: var(--font-body); font-size: 15px;">{{ sector or "—" }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.market_cap }}</span>
+        <span class="value">{{ market_cap_display }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.next_earnings }}</span>
+        <span class="value" style="font-size: 15px;">{{ next_earnings_date or "—" }}</span>
+      </div>
+    </div>
+  </section>
+
+  {% if earnings_warning %}
+  <div class="warning earnings">
+    <h3>⚠ {{ s.earnings_warning_title }}</h3>
+    <p>{{ s.earnings_warning_body }}</p>
+  </div>
+  {% endif %}
+
+  {% if not best.liquidity_ok %}
+  <div class="warning liquidity">
+    <h3>⚠ {{ s.liquidity_warning_title }}</h3>
+    <p>{{ s.liquidity_warning_body }}</p>
+  </div>
+  {% endif %}
+
+  {% if not best.affordable %}
+  <div class="warning affordability">
+    <h3>⚠ {{ s.affordability_warning_title }}</h3>
+    <p>{{ s.affordability_warning_body }}</p>
+  </div>
+  {% endif %}
+
+  <section class="panel">
+    <h2>{{ strategy_name }}</h2>
+    <p class="blurb">{{ strategy_blurb }}</p>
+    {{ payoff_svg | safe }}
+  </section>
+
+  <section class="panel">
+    <h2>{{ s.contract_section }}</h2>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">{{ s.strike }}</span>
+        <span class="value">{{ strategy.strike | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.expiration }}</span>
+        <span class="value" style="font-size: 15px;">{{ strategy.expiration }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.dte }}</span>
+        <span class="value">{{ best.dte }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.premium }}</span>
+        <span class="value">{{ strategy.premium | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.breakeven }}</span>
+        <span class="value">{{ strategy.breakeven[0] | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.max_profit }}</span>
+        <span class="value pl-positive">
+          {% if strategy.max_profit is none %}{{ s.unlimited }}{% else %}{{ strategy.max_profit | money }}{% endif %}
+        </span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.max_loss }}</span>
+        <span class="value pl-negative">{{ strategy.max_loss | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.capital_required }}</span>
+        <span class="value">{{ strategy.capital_required | money }}</span>
+      </div>
+    </div>
+    {% if mode == 'learn' %}
+    <p class="teach">{{ s.breakeven_vs_strike_note }}</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>{{ s.greeks_section }}</h2>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">{{ s.delta }}</span>
+        <span class="value {{ 'source-local' if contract.greeks_source == 'calculated locally' else '' }}">{{ "%.3f"|format(contract.delta) }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.gamma }}</span>
+        <span class="value {{ 'source-local' if contract.greeks_source == 'calculated locally' else '' }}">{{ "%.4f"|format(contract.gamma) }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.theta }}</span>
+        <span class="value {{ 'source-local' if contract.greeks_source == 'calculated locally' else '' }}">{{ "%.3f"|format(contract.theta) }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.vega }}</span>
+        <span class="value {{ 'source-local' if contract.greeks_source == 'calculated locally' else '' }}">{{ "%.3f"|format(contract.vega) }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.rho }}</span>
+        <span class="value {{ 'source-local' if contract.greeks_source == 'calculated locally' else '' }}">{{ "%.3f"|format(contract.rho) }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.implied_volatility }}</span>
+        <span class="value {{ 'source-local' if contract.greeks_source == 'calculated locally' else '' }}">{{ "%.1f"|format(contract.implied_volatility * 100) }}%</span>
+      </div>
+    </div>
+    <p class="caption">
+      {% if contract.greeks_source == 'calculated locally' %}
+        * {{ s.greeks_source_local }}
+      {% else %}
+        {{ s.greeks_source_alpaca }}
+      {% endif %}
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>{{ s.probability_section }}</h2>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">{{ s.pop_closed_form }}</span>
+        <span class="value">{{ "%.1f"|format(best.pop_closed_form * 100) }}%</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.pop_monte_carlo }}</span>
+        <span class="value">{{ "%.1f"|format(best.pop_monte_carlo * 100) }}%</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.probability_of_touch }}</span>
+        <span class="value">{{ "%.1f"|format(best.probability_of_touch * 100) }}%</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.avg_win }}</span>
+        <span class="value pl-positive">{{ best.avg_win | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.avg_loss }}</span>
+        <span class="value pl-negative">{{ (best.avg_loss * -1) | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.score }}</span>
+        <span class="value">{{ "%.4f"|format(best.score) }}</span>
+      </div>
+    </div>
+    {% if best.pop_disagreement_flag %}
+    <p class="teach">⚠ {{ s.pop_disagreement }}</p>
+    {% endif %}
+    {% if mode == 'learn' %}
+    <p class="teach">{{ s.expected_return_note }}</p>
+    {% endif %}
+    {% if why_best %}
+    <p class="caption"><strong>{{ s.why_best }}:</strong> {{ why_best }} ({{ s.candidates_evaluated }}: {{ candidates_evaluated }})</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>{{ s.technical_section }}</h2>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="label">{{ s.sma20 }}</span>
+        <span class="value">{{ indicators.sma20 | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.sma50 }}</span>
+        <span class="value">{{ indicators.sma50 | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.sma200 }}</span>
+        <span class="value">{{ indicators.sma200 | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.rsi14 }}</span>
+        <span class="value">{{ "%.1f"|format(indicators.rsi14) }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.hv30 }}</span>
+        <span class="value">{{ "%.1f"|format(indicators.hv30 * 100) }}%</span>
+        <span class="caption">{{ "%.0f"|format(indicators.hv30_percentile) }} {{ s.percentile_suffix }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.hv90 }}</span>
+        <span class="value">{{ "%.1f"|format(indicators.hv90 * 100) }}%</span>
+        <span class="caption">{{ "%.0f"|format(indicators.hv90_percentile) }} {{ s.percentile_suffix }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.range_52w }}</span>
+        <span class="value" style="font-size: 15px;">{{ indicators.low_52w | money }} – {{ indicators.high_52w | money }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">{{ s.directional_bias }}</span>
+        <span class="value" style="font-size: 15px;">{{ bias_display }}</span>
+      </div>
+    </div>
+  </section>
+
+  <p class="footer-note">{{ s.footer_disclaimer }}</p>
+
+</div>
+</body>
+</html>
