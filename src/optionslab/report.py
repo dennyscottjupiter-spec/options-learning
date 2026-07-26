@@ -315,6 +315,10 @@ def build_report_context(
         result["spot_price"], strategy.strike, strategy.premium, strategy.option_type, cfg["report"]["atm_band_pct"]
     )
 
+    round_trip_commission = cfg["costs"]["commission_per_contract"] * 2
+    net_max_profit = strategy.max_profit - round_trip_commission if strategy.max_profit is not None else None
+    net_max_loss = strategy.max_loss - round_trip_commission
+
     s = get_strings(lang)
     strings_dict = {**s}
 
@@ -359,6 +363,9 @@ def build_report_context(
         "earnings_warning": earnings_warning,
         "early_assignment_warning": early_assignment_warning,
         "moneyness_split": moneyness_split,
+        "round_trip_commission": round_trip_commission,
+        "net_max_profit": net_max_profit,
+        "net_max_loss": net_max_loss,
         "indicators": ind,
         "bias_display": s[_BIAS_KEY.get(ind["directional_bias"], "bias_insufficient")],
     }
