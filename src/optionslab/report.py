@@ -5,6 +5,7 @@ print a running report page to PDF, auto-archived under archive/.
 """
 from __future__ import annotations
 
+import ast
 import re
 from datetime import date, datetime
 from pathlib import Path
@@ -21,6 +22,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES_DIR = PROJECT_ROOT / "templates"
 ARCHIVE_DIR = PROJECT_ROOT / "archive"
 _SRC_DIR = PROJECT_ROOT / "src" / "optionslab"
+
+GITHUB_REPO = "dennyscottjupiter-spec/options-learning"
+GITHUB_BRANCH = "main"
 
 _BIAS_KEY = {
     "bullish": "bias_bullish",
@@ -83,7 +87,80 @@ def _highlight_formula(formula: str) -> Markup:
     return Markup("".join(out))
 
 
-def _methodology_rows(mc_paths: int, mc_seed: int, src_dir: str) -> list[dict]:
+def _function_line(file_path: Path, func_name: str) -> int | None:
+    """Best-effort line number of `def func_name` in `file_path`, for anchoring
+    a Source-column link. Returns None (unanchored link) rather than raising
+    if the file can't be parsed — the link to the file itself still works."""
+    try:
+        tree = ast.parse(file_path.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError):
+        return None
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == func_name:
+            return node.lineno
+    return None
+
+
+def _linkify_source(source: str, static_export: bool) -> Markup:
+    """Turns each `file.py::func[, func2]` segment of a methodology `source`
+    string into one link per function — a GitHub blob permalink for the
+    static export (never the local machine's path) or the read-only
+    /source/{module} route for the live app, anchored to the function's line
+    where it can be located. Segments chained with ' → ' each get their own
+    link(s); the arrow itself is left as plain text."""
+    rendered_parts = []
+    for part in source.split(" → "):
+        file_path_str, sep, funcs_str = part.partition("::")
+        if not sep:
+            rendered_parts.append(str(escape(part)))
+            continue
+        file_name = file_path_str.rsplit("/", 1)[-1]
+        real_path = _SRC_DIR / file_name
+        links = []
+        for func in (f.strip() for f in funcs_str.split(",")):
+            line = _function_line(real_path, func)
+            anchor = f"#L{line}" if line else ""
+            if static_export:
+                href = f"https://github.com/{GITHUB_REPO}/blob/{GITHUB_BRANCH}/src/optionslab/{file_name}{anchor}"
+            else:
+                href = f"/source/{file_name}{anchor}"
+            links.append(f'<a href="{escape(href)}">{escape(file_name)}::{escape(func)}</a>')
+        rendered_parts.append(", ".join(links))
+    return Markup(" → ".join(rendered_parts))
+
+
+def render_source_html(module: str) -> str | None:
+    """Read-only view of one src/optionslab module, for the methodology
+    table's Source links in the live app. Returns None for anything outside
+    src/optionslab/ (no path separators, no traversal) so the caller 404s."""
+    if "/" in module or "\\" in module or not module.endswith(".py"):
+        return None
+    resolved = (_SRC_DIR / module).resolve()
+    try:
+        resolved.relative_to(_SRC_DIR.resolve())
+    except ValueError:
+        return None
+    if not resolved.is_file():
+        return None
+    lines = resolved.read_text(encoding="utf-8").splitlines()
+    body = "\n".join(
+        f'<span id="L{i}" class="src-line">{escape(line)}</span>' for i, line in enumerate(lines, start=1)
+    )
+    return (
+        "<!doctype html><html><head><meta charset='utf-8'>"
+        f"<title>{escape(module)} — Options Lab source</title>"
+        "<link rel='stylesheet' href='/static/css/report.css'>"
+        "<style>.src-pre{background:var(--panel);border:1px solid var(--hairline);"
+        "border-radius:8px;padding:16px;overflow-x:auto;font-family:var(--font-mono);"
+        "font-size:12.5px;line-height:1.6;color:var(--ink);}"
+        ".src-line{display:block;white-space:pre;}"
+        ".src-line:target{background:var(--indigo-soft);}</style></head>"
+        f"<body><div class='page'><h1>{escape(module)}</h1>"
+        f"<pre class='src-pre'>{body}</pre></div></body></html>"
+    )
+
+
+def _methodology_rows(mc_paths: int, mc_seed: int, src_dir: str, static_export: bool) -> list[dict]:
     """Every 'Probability of profit' figure traces to one of these — exact
     formula as coded, plus the path to the function that computes it, so the
     number is checkable, not asserted. `src_dir` is the absolute local path
@@ -130,6 +207,7 @@ def _methodology_rows(mc_paths: int, mc_seed: int, src_dir: str) -> list[dict]:
     ]
     for row in rows:
         row["formula_html"] = _highlight_formula(row["formula"])
+        row["source_html"] = _linkify_source(row["source"], static_export)
     return rows
 
 
@@ -178,7 +256,9 @@ def build_report_context(
 
     strategy_options = [(t, get_strategy_name(t, lang)) for t in select.STRATEGY_TYPES]
     src_dir_display = "src/optionslab" if static_export else str(_SRC_DIR).replace("\\", "/")
-    methodology = _methodology_rows(cfg["math"]["monte_carlo_paths"], cfg["math"]["monte_carlo_seed"], src_dir_display)
+    methodology = _methodology_rows(
+        cfg["math"]["monte_carlo_paths"], cfg["math"]["monte_carlo_seed"], src_dir_display, static_export
+    )
 
     return {
         "lang": lang,

@@ -20,7 +20,7 @@
   <header class="report-header">
     <div class="titles">
       <h1>AAPL — Long Call (LEAPS)</h1>
-      <p class="subtitle">Apple Inc. · Generated 2026-07-26 15:26</p>
+      <p class="subtitle">Apple Inc. · Generated 2026-07-26 15:33</p>
     </div>
     <div class="header-controls">
       <nav class="pill-toggle" aria-label="Report depth">
@@ -386,37 +386,37 @@ understanding the mechanics before you ever risk a dollar.</p>
             <tr>
               <td>Closed-form (lognormal)</td>
               <td class="formula"><span class="tok-func">N</span><span class="tok-op">(</span><span class="tok-ident">d2</span><span class="tok-op">)</span> <span class="tok-op">[</span><span class="tok-ident">breakeven</span> above spot<span class="tok-op">]</span> or <span class="tok-func">N</span><span class="tok-op">(</span><span class="tok-op">−</span><span class="tok-ident">d2</span><span class="tok-op">)</span> <span class="tok-op">[</span>below<span class="tok-op">]</span> <span class="tok-op">—</span> <span class="tok-ident">d2</span> <span class="tok-op">=</span> <span class="tok-op">[</span><span class="tok-func">ln</span><span class="tok-op">(</span><span class="tok-ident">S</span><span class="tok-op">/</span><span class="tok-ident">breakeven</span><span class="tok-op">)</span> <span class="tok-op">+</span> <span class="tok-op">(</span><span class="tok-ident">r</span> <span class="tok-op">−</span> <span class="tok-ident">σ</span><span class="tok-op">²</span><span class="tok-op">/</span><span class="tok-num">2</span><span class="tok-op">)</span><span class="tok-ident">T</span><span class="tok-op">]</span> <span class="tok-op">/</span> <span class="tok-op">(</span><span class="tok-ident">σ</span><span class="tok-op">√</span><span class="tok-ident">T</span><span class="tok-op">)</span></td>
-              <td class="source">src/optionslab/bs.py::d1_d2 → src/optionslab/pop.py::probability_of_profit_closed_form</td>
+              <td class="source"><a href="https://github.com/dennyscottjupiter-spec/options-learning/blob/main/src/optionslab/bs.py#L28">bs.py::d1_d2</a> → <a href="https://github.com/dennyscottjupiter-spec/options-learning/blob/main/src/optionslab/pop.py#L33">pop.py::probability_of_profit_closed_form</a></td>
             </tr>
             
             <tr>
               <td>Monte Carlo (100,000 paths)</td>
               <td class="formula"><span class="tok-func">mean</span><span class="tok-op">(</span><span class="tok-num">1</span><span class="tok-op">{</span><span class="tok-ident">S_T</span> beats <span class="tok-ident">breakeven</span><span class="tok-op">}</span><span class="tok-op">)</span> over <span class="tok-num">100,000</span> simulated <span class="tok-ident">GBM</span> paths <span class="tok-op">(</span>antithetic variates<span class="tok-op">,</span> <span class="tok-ident">seed</span><span class="tok-op">=</span><span class="tok-num">7</span><span class="tok-op">)</span></td>
-              <td class="source">src/optionslab/pop.py::simulate_paths, probability_of_profit_monte_carlo</td>
+              <td class="source"><a href="https://github.com/dennyscottjupiter-spec/options-learning/blob/main/src/optionslab/pop.py#L43">pop.py::simulate_paths</a>, <a href="https://github.com/dennyscottjupiter-spec/options-learning/blob/main/src/optionslab/pop.py#L74">pop.py::probability_of_profit_monte_carlo</a></td>
             </tr>
             
             <tr>
               <td>Probability of touching breakeven before expiration</td>
               <td class="formula"><span class="tok-func">mean</span><span class="tok-op">(</span><span class="tok-num">1</span><span class="tok-op">{</span>path touches <span class="tok-ident">breakeven</span> at any point before expiry<span class="tok-op">}</span><span class="tok-op">)</span><span class="tok-op">,</span> same simulated paths</td>
-              <td class="source">src/optionslab/pop.py::probability_of_touch</td>
+              <td class="source"><a href="https://github.com/dennyscottjupiter-spec/options-learning/blob/main/src/optionslab/pop.py#L82">pop.py::probability_of_touch</a></td>
             </tr>
             
             <tr>
               <td>Average win (simulated)</td>
               <td class="formula"><span class="tok-func">mean</span><span class="tok-op">(</span><span class="tok-ident">payoff</span><span class="tok-op">)</span> over simulated paths where <span class="tok-ident">payoff</span> <span class="tok-op">&gt;</span> <span class="tok-num">0</span></td>
-              <td class="source">src/optionslab/select.py::evaluate_contract</td>
+              <td class="source"><a href="https://github.com/dennyscottjupiter-spec/options-learning/blob/main/src/optionslab/select.py#L129">select.py::evaluate_contract</a></td>
             </tr>
             
             <tr>
               <td>Average loss (simulated)</td>
               <td class="formula"><span class="tok-func">mean</span><span class="tok-op">(</span><span class="tok-op">−</span><span class="tok-ident">payoff</span><span class="tok-op">)</span> over simulated paths where <span class="tok-ident">payoff</span> <span class="tok-op">≤</span> <span class="tok-num">0</span></td>
-              <td class="source">src/optionslab/select.py::evaluate_contract</td>
+              <td class="source"><a href="https://github.com/dennyscottjupiter-spec/options-learning/blob/main/src/optionslab/select.py#L129">select.py::evaluate_contract</a></td>
             </tr>
             
             <tr>
               <td>Risk-adjusted score (annualized)</td>
               <td class="formula"><span class="tok-op">(</span><span class="tok-ident">POP_MC</span> <span class="tok-op">×</span> <span class="tok-ident">avg_win</span> <span class="tok-op">−</span> <span class="tok-op">(</span><span class="tok-num">1</span> <span class="tok-op">−</span> <span class="tok-ident">POP_MC</span><span class="tok-op">)</span> <span class="tok-op">×</span> <span class="tok-ident">avg_loss</span><span class="tok-op">)</span> <span class="tok-op">÷</span> <span class="tok-ident">capital_required</span> <span class="tok-op">×</span> <span class="tok-op">(</span><span class="tok-num">365</span> <span class="tok-op">÷</span> <span class="tok-ident">DTE</span><span class="tok-op">)</span></td>
-              <td class="source">src/optionslab/select.py::evaluate_contract</td>
+              <td class="source"><a href="https://github.com/dennyscottjupiter-spec/options-learning/blob/main/src/optionslab/select.py#L129">select.py::evaluate_contract</a></td>
             </tr>
             
           </tbody>
